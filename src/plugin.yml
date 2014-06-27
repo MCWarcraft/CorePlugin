@@ -1,0 +1,7 @@
+name: CorePlugin
+main: randy.core.main
+version: 1.0
+commands:
+  help:
+    description: Help command
+    usage: /<command>
