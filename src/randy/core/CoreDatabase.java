@@ -5,9 +5,6 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 
-import bourg.austin.HonorPoints.DatabaseOperations;
-import randy.core.CoreScoreboard;
-
 public class CoreDatabase {
 	
 	/*

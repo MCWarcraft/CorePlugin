@@ -17,6 +17,7 @@ public class CoreScoreboardManager
 	
 	public static void removeBoard(String playerName)
 	{
+		boards.get(playerName).resetBoard();
 		boards.remove(boards);
 	}
 }

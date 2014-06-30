@@ -9,8 +9,6 @@ import org.bukkit.Bukkit;
 import austin.CavemanSQL.DatabaseConnection;
 import austin.CavemanSQL.DatabaseQueryAction;
 import austin.CavemanSQL.DatabaseUpdateAction;
-import randy.kits.CustomKit;
-import randy.kits.Kits;
 
 public class CoreSQL {
 	

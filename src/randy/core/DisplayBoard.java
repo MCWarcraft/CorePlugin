@@ -14,8 +14,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-import randy.core.ScoreboardValue;
-
 public class DisplayBoard
 {
 	private Player player;
@@ -36,7 +34,6 @@ public class DisplayBoard
 		this.headerColor = headerColor;
 		
 		this.title = title;
-		resetBoard();
 		
 		values = new HashMap<OfflinePlayer, Score>();
 		titles = new ArrayList<String>();
@@ -88,18 +85,15 @@ public class DisplayBoard
 	}
 	
 	public void update()
-	{		
-		System.out.println("Update");
-		
+	{
+		resetBoard();
 		ArrayList<String> finalStrings = padDuplicates(constructLines());
 		values.clear();
 		
 		for (int i = 0; i < finalStrings.size(); i++)
 		{
-			System.out.println("Putting " + i + ": " + finalStrings.get(i));
 			values.put(Bukkit.getOfflinePlayer(finalStrings.get(i)), o.getScore(Bukkit.getOfflinePlayer(finalStrings.get(i))));
 			values.get(Bukkit.getOfflinePlayer(finalStrings.get(i))).setScore(finalStrings.size() - i);
-			System.out.println("Score: " + values.get(Bukkit.getOfflinePlayer(finalStrings.get(i))).getScore());
 		}
 		
 		player.setScoreboard(board);
@@ -107,17 +101,17 @@ public class DisplayBoard
 	
 	public void hide()
 	{
-		System.out.println("Hide");
 		player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 	}
 	
 	private String constructLine(int line)
-	{
-		System.out.println("Construct Line");
-		
+	{		
 		//If dynamic value
 		if (fixedValues.get(line) == null && dynamicValues.get(line) != null)
+		{
+			System.out.println(dynamicKeys.get(line) + ": " + dynamicValues.get(line).getScoreboardValue(dynamicKeys.get(line)));
 			return titles.get(line) + scoreColor + dynamicValues.get(line).getScoreboardValue(dynamicKeys.get(line));
+		}
 		//If static value
 		else if (dynamicValues.get(line) == null && fixedValues.get(line) != null)
 			return titles.get(line) + scoreColor + fixedValues.get(line);
@@ -131,8 +125,6 @@ public class DisplayBoard
 	
 	private ArrayList<String> constructLines()
 	{
-		System.out.println("Construct Lines");
-		
 		ArrayList<String> lines = new ArrayList<String>();
 		for (int i = 0; i < titles.size(); i++)
 			lines.add(constructLine(i));
@@ -163,14 +155,24 @@ public class DisplayBoard
 	
 	public void setTitle(String text)
 	{
-		o.setDisplayName(text);
+		title = text;
 	}
-	
+
 	public void resetBoard()
 	{
 		board = Bukkit.getScoreboardManager().getNewScoreboard();
 		o = board.registerNewObjective("test", "dummy");
 		o.setDisplayName(title);
 		o.setDisplaySlot(DisplaySlot.SIDEBAR);
+	}
+	
+	public void resetFormat()
+	{		
+		values.clear();
+		titles.clear();
+		fixedValues.clear();
+		dynamicValues.clear();
+		dynamicKeys.clear();
+		hide();
 	}
 }
