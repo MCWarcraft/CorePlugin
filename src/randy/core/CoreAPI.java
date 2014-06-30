@@ -1,13 +1,8 @@
  package randy.core;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
-import randy.kits.Kits;
-
 public class CoreAPI {
 	
 	/*
@@ -15,39 +10,12 @@ public class CoreAPI {
 	 */
 	public static void ExitGameModes(Player player){
 		
-		CoreScoreboard.RemoveScoreboard(player.getName());
 		
-		randy.ffa.main.RemovePlayerFromFFA(player);
-		bourg.austin.VersusArena.Background.MyListener.executeExit(player);
-		randy.minigames.GameManager.RemovePlayer(player);
-		randy.ffaextra.main.towerPlayers.remove(player);
-		Kits.hasKit.put(player, false);
-	}
-	
-	/*
-	 * GAME MODE CHECKING
-	 */
-	public static String GetCurrentGameMode(Player player){
-		if(randy.ffa.config.ffaPlayerList.contains(player)) return "ffa";
-		if(randy.minigames.GameManager.currentGame != null && randy.minigames.GameManager.currentGame.participants.contains(player) ||
-				randy.minigames.main.minigamePlayers.contains(player)) return "minigame";
-		if(randy.ffaextra.main.towerPlayers.contains(player)) return "tower";
-		return "spawn";
-	}
-	
-	public static ArrayList<Player> GetGameModePlayers(String gamemode){
-		ArrayList<Player> gameModePlayer = new ArrayList<Player>();
-		Player[] players = Bukkit.getOnlinePlayers();
-		for(Player player : players){
-			if(gamemode.equals("ffa") && randy.ffa.config.ffaPlayerList.contains(player)) gameModePlayer.add(player);
-			else if(gamemode.equals("minigame") && randy.minigames.GameManager.currentGame != null && randy.minigames.GameManager.currentGame.participants.contains(player)) gameModePlayer.add(player);
-			else if(gamemode.equals("tower") && randy.ffaextra.main.towerPlayers.contains(player)) gameModePlayer.add(player);
-			else if(gamemode.equals("spawn")) gameModePlayer.add(player);
-		}
 		
-		return gameModePlayer;
+		//Can't find entrance circumstance
+		//randy.minigames.GameManager.RemovePlayer(player);
+
 	}
-	
 	/*
 	 * MISC
 	 */

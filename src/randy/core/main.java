@@ -1,8 +1,5 @@
 package randy.core;
 
-import java.sql.SQLException;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,16 +8,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import randy.core.tools.CoreDatabase;
-import randy.core.tools.CoreSQL;
+import core.Custody.CustodyLogoffListener;
 
 public class main extends JavaPlugin implements Listener {
 	
 	private final CoreListener coreListener = new CoreListener();
+	private final CustodyLogoffListener custodyListener = new CustodyLogoffListener();
 	
 	@Override
 	public void onDisable() {
-		CoreDatabase.PushChanges();
+		//TODO: Fix database
+		//CoreDatabase.PushChanges();
 		System.out.print("[Core Plugin] succesfully disabled.");
 	}
 	
@@ -28,19 +26,22 @@ public class main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(coreListener, this);
+		getServer().getPluginManager().registerEvents(custodyListener, this);
 		
+		//TODO: Fix database
+		/*
 		try {
 			CoreSQL.ConnectToSQL();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		CoreScoreboard.scoreboardManager = Bukkit.getScoreboardManager();
 		
 		for(Player player : Bukkit.getOnlinePlayers()){
 			CoreDatabase.LoadPlayerData(player.getName());
-			CoreScoreboard.CreateScoreboard(player.getName());
 		}
+		*/
+		
 		System.out.print("[Core Plugin] Succesfully enabled.");
 	}
 	

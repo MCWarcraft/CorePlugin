@@ -3,12 +3,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/bukkit-1.7.2-R0.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/VersusArena.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/FFA.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/FFAExtra.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/Minigames.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/SpawnUtility.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/Kits.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/HonorPoints.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
