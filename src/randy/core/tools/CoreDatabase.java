@@ -5,7 +5,11 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 
-public class CoreDatabase {
+import bourg.austin.HonorPoints.DatabaseOperations;
+import core.Scoreboard.CoreScoreboardManager;
+
+public class CoreDatabase
+{
 	
 	/*
 	 * All hashmaps have follow a format:
@@ -200,7 +204,8 @@ public class CoreDatabase {
 
 					loadedPlayers.add(player);
 					
-					CoreScoreboard.UpdateScoreboard(player);
+					if (CoreScoreboardManager.getDisplayBoard(player) != null)
+						CoreScoreboardManager.getDisplayBoard(player).update(false);
 				}
 			});
 

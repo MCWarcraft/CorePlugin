@@ -1,4 +1,4 @@
-package randy.core;
+package core.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,14 +24,14 @@ public class DisplayBoard
 	private ArrayList<String> titles, fixedValues;
 	private ArrayList<ScoreboardValue> dynamicValues;
 	private ArrayList<String> dynamicKeys;
-	private ChatColor scoreColor, headerColor;
+	private ChatColor scoreColor;
 	private String title;
+	private boolean showing;
 	
-	protected DisplayBoard(Player player, String title, ChatColor scoreColor, ChatColor headerColor)
+	protected DisplayBoard(Player player, String title, ChatColor scoreColor)
 	{
 		this.player = player;	
 		this.scoreColor = scoreColor;
-		this.headerColor = headerColor;
 		
 		this.title = title;
 		
@@ -40,11 +40,12 @@ public class DisplayBoard
 		fixedValues = new ArrayList<String>();
 		dynamicValues = new ArrayList<ScoreboardValue>();
 		dynamicKeys = new ArrayList<String>();
+		showing = false;
 	}
 	
 	protected DisplayBoard(Player player)
 	{
-		this(player, "", ChatColor.RESET, ChatColor.RESET);
+		this(player, "", ChatColor.RESET);
 	}
 	
 	public void putField(String title, String value)
@@ -84,7 +85,7 @@ public class DisplayBoard
 		dynamicKeys.add(null);
 	}
 	
-	public void update()
+	public void update(boolean forceshow)
 	{
 		resetBoard();
 		ArrayList<String> finalStrings = padDuplicates(constructLines());
@@ -95,13 +96,20 @@ public class DisplayBoard
 			values.put(Bukkit.getOfflinePlayer(finalStrings.get(i)), o.getScore(Bukkit.getOfflinePlayer(finalStrings.get(i))));
 			values.get(Bukkit.getOfflinePlayer(finalStrings.get(i))).setScore(finalStrings.size() - i);
 		}
-		
-		player.setScoreboard(board);
+		if (forceshow || showing)
+			show();
 	}
 	
 	public void hide()
 	{
 		player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		showing = false;
+	}
+	
+	public void show()
+	{
+		player.setScoreboard(board);
+		showing = true;
 	}
 	
 	private String constructLine(int line)
@@ -109,7 +117,7 @@ public class DisplayBoard
 		//If dynamic value
 		if (fixedValues.get(line) == null && dynamicValues.get(line) != null)
 		{
-			System.out.println(dynamicKeys.get(line) + ": " + dynamicValues.get(line).getScoreboardValue(dynamicKeys.get(line)));
+			//System.out.println(dynamicKeys.get(line) + ": " + dynamicValues.get(line).getScoreboardValue(dynamicKeys.get(line)));
 			return titles.get(line) + scoreColor + dynamicValues.get(line).getScoreboardValue(dynamicKeys.get(line));
 		}
 		//If static value
@@ -117,7 +125,7 @@ public class DisplayBoard
 			return titles.get(line) + scoreColor + fixedValues.get(line);
 		//If header
 		else if (dynamicValues.get(line) == null && fixedValues.get(line) == null && titles.get(line) != null)
-			return headerColor + titles.get(line);
+			return titles.get(line);
 		//Else if it's just a space
 		else
 			return " ";
@@ -148,17 +156,12 @@ public class DisplayBoard
 		scoreColor = color;
 	}
 	
-	public void setHeaderColor(ChatColor color)
-	{
-		headerColor = color;
-	}
-	
 	public void setTitle(String text)
 	{
 		title = text;
 	}
 
-	public void resetBoard()
+	private void resetBoard()
 	{
 		board = Bukkit.getScoreboardManager().getNewScoreboard();
 		o = board.registerNewObjective("test", "dummy");
@@ -173,6 +176,7 @@ public class DisplayBoard
 		fixedValues.clear();
 		dynamicValues.clear();
 		dynamicKeys.clear();
+		scoreColor = ChatColor.RESET;
 		hide();
 	}
 }

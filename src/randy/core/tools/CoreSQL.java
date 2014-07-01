@@ -6,6 +6,8 @@ import java.sql.SQLException;
 
 import org.bukkit.Bukkit;
 
+import randy.kits.CustomKit;
+import randy.kits.Kits;
 import austin.CavemanSQL.DatabaseConnection;
 import austin.CavemanSQL.DatabaseQueryAction;
 import austin.CavemanSQL.DatabaseUpdateAction;

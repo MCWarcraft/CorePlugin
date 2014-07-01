@@ -4,14 +4,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import randy.core.CoreScoreboardManager;
+import core.Scoreboard.CoreScoreboardManager;
 
 public class CustodyLogoffListener implements Listener
 {
 	@EventHandler
 	public void playerLogoffEvent(PlayerQuitEvent event)
 	{
-		Custody.switchCustody(event.getPlayer());
+		Custody.removeCustody(event.getPlayer().getName());
 		CoreScoreboardManager.removeBoard(event.getPlayer().getName());
 	}
 	
@@ -19,5 +19,6 @@ public class CustodyLogoffListener implements Listener
 	public void custodySwitchEvent(CustodySwitchEvent event)
 	{
 		CoreScoreboardManager.getDisplayBoard(event.getPlayer()).resetFormat();
+		
 	}
 }

@@ -1,4 +1,4 @@
-package randy.core;
+package core.Scoreboard;
 
 public interface ScoreboardValue
 {

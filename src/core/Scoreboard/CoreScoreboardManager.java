@@ -1,4 +1,4 @@
-package randy.core;
+package core.Scoreboard;
 
 import java.util.HashMap;
 
@@ -17,7 +17,13 @@ public class CoreScoreboardManager
 	
 	public static void removeBoard(String playerName)
 	{
-		boards.get(playerName).resetBoard();
-		boards.remove(boards);
+		boards.remove(playerName);
+	}
+	
+	public static DisplayBoard getDisplayBoard(String player)
+	{
+		if (boards.get(player) == null)
+			return null;
+		return boards.get(player);
 	}
 }
