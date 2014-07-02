@@ -20,6 +20,7 @@ import bourg.austin.HonorPoints.HonorCommandExecutor;
 import bourg.austin.HonorPoints.HonorListener;
 import bourg.austin.HonorPoints.HonorPoints;
 import core.Custody.CustodyLogoffListener;
+import core.Scoreboard.CoreScoreboardManager;
 
 public class CorePlugin extends JavaPlugin implements Listener {
 	
@@ -70,6 +71,8 @@ public class CorePlugin extends JavaPlugin implements Listener {
 		for(Player player : Bukkit.getOnlinePlayers()){
 			CoreDatabase.LoadPlayerData(player.getName());
 		}
+		
+		CoreScoreboardManager.initialize(this);
 		
 		System.out.print("[Core Plugin] Succesfully enabled.");
 	}

@@ -9,10 +9,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+
+import randy.core.CorePlugin;
 
 public class DisplayBoard
 {
@@ -25,15 +29,25 @@ public class DisplayBoard
 	private ArrayList<ScoreboardValue> dynamicValues;
 	private ArrayList<String> dynamicKeys;
 	private ChatColor scoreColor;
-	private String title;
+	private String showTitle, steadyTitle, scrollableTitle;
 	private boolean showing;
+	private CorePlugin plugin;
 	
-	protected DisplayBoard(Player player, String title, ChatColor scoreColor)
+	//Scrolling
+	private int stringSize = 16;
+	private String scrolled = "";
+	private int currentIndex = 0;
+	
+	private BukkitTask scrollTask;
+	
+	
+	protected DisplayBoard(Player player, String title, ChatColor scoreColor, CorePlugin plugin)
 	{
 		this.player = player;	
 		this.scoreColor = scoreColor;
+		this.plugin = plugin;
 		
-		this.title = title;
+		setTitle(title, "");
 		
 		values = new HashMap<OfflinePlayer, Score>();
 		titles = new ArrayList<String>();
@@ -41,11 +55,12 @@ public class DisplayBoard
 		dynamicValues = new ArrayList<ScoreboardValue>();
 		dynamicKeys = new ArrayList<String>();
 		showing = false;
+		
 	}
 	
-	protected DisplayBoard(Player player)
+	protected DisplayBoard(Player player, CorePlugin plugin)
 	{
-		this(player, "", ChatColor.RESET);
+		this(player, "", ChatColor.RESET, plugin);
 	}
 	
 	public void putField(String title, String value)
@@ -144,9 +159,12 @@ public class DisplayBoard
 		ArrayList<String> padded = new ArrayList<String>();
 		for (int i = 0; i < original.size(); i++)
 		{
+			/*
 			padded.add(original.get(i) + StringUtils.repeat(" ", Collections.frequency(original.subList(0, i), original.get(i))));
 			if (padded.get(padded.size() - 1).length() > 16)
-				padded.remove(padded.size() - 1);				
+				padded.remove(padded.size() - 1);		
+			*/
+			padded.add((original.get(i) + StringUtils.repeat(" ", 16 - original.get(i).length())).substring(0, 16 - Collections.frequency(original.subList(0, i), original.get(i))));
 		}
 		return padded;		
 	}
@@ -156,16 +174,36 @@ public class DisplayBoard
 		scoreColor = color;
 	}
 	
-	public void setTitle(String text)
+	public void setTitle(String scrollable, String steady)
 	{
-		title = text;
+		try {scrollTask.cancel();} catch (NullPointerException e){}
+		
+		if (scrollable.length() + steady.length() <= 16)
+			showTitle = steady + scrollable;	
+		else
+		{
+			steadyTitle = steady;
+			scrollableTitle = scrollable + "     ";
+			
+			stringSize = 16 - steadyTitle.length();
+			scroll();
+			
+			scrollTask = new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					scroll();
+				}
+			}.runTaskTimer(plugin, 18, 4);
+		}
 	}
 
 	private void resetBoard()
 	{
 		board = Bukkit.getScoreboardManager().getNewScoreboard();
 		o = board.registerNewObjective("test", "dummy");
-		o.setDisplayName(title);
+		o.setDisplayName(showTitle);
 		o.setDisplaySlot(DisplaySlot.SIDEBAR);
 	}
 	
@@ -177,6 +215,22 @@ public class DisplayBoard
 		dynamicValues.clear();
 		dynamicKeys.clear();
 		scoreColor = ChatColor.RESET;
+		stringSize = 16;
+		scrolled = "";
+		currentIndex = 0;
 		hide();
+	}
+
+	private void scroll()
+	{
+		if (currentIndex == scrollableTitle.length()) currentIndex = 0;
+		if (currentIndex + stringSize <= scrollableTitle.length())
+			scrolled = scrollableTitle.substring(currentIndex, currentIndex + stringSize);
+		else
+			scrolled = scrollableTitle.substring(currentIndex, scrollableTitle.length()) + scrollableTitle.substring(0, (currentIndex + stringSize) - scrollableTitle.length());
+		currentIndex++;
+		
+		showTitle = steadyTitle + scrolled;
+		o.setDisplayName(showTitle);
 	}
 }
