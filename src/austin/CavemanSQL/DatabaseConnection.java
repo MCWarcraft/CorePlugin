@@ -53,4 +53,9 @@ public class DatabaseConnection
 	{
 		return new DatabaseQueryAction(connection, tableName);
 	}
+	
+	public Connection getConnection()
+	{
+		return connection;
+	}
 }

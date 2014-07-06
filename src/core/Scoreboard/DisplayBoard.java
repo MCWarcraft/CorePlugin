@@ -16,7 +16,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-import randy.core.CorePlugin;
+import core.CorePlugin;
 
 public class DisplayBoard
 {
@@ -132,7 +132,6 @@ public class DisplayBoard
 		//If dynamic value
 		if (fixedValues.get(line) == null && dynamicValues.get(line) != null)
 		{
-			//System.out.println(dynamicKeys.get(line) + ": " + dynamicValues.get(line).getScoreboardValue(dynamicKeys.get(line)));
 			return titles.get(line) + scoreColor + dynamicValues.get(line).getScoreboardValue(dynamicKeys.get(line));
 		}
 		//If static value

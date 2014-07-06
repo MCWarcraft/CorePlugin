@@ -1,4 +1,4 @@
- package randy.core;
+ package core;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -7,17 +7,6 @@ public class CoreAPI {
 	
 	/*
 	 * EXITING GAME MODES
-	 */
-	public static void ExitGameModes(Player player){
-		
-		
-		
-		//Can't find entrance circumstance
-		//randy.minigames.GameManager.RemovePlayer(player);
-
-	}
-	/*
-	 * MISC
 	 */
 	public static void BroadcastKillstreak(Player player, int killstreak, String gamemode){
 		String message = "-";

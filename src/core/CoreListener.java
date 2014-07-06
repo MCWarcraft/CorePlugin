@@ -1,4 +1,4 @@
-package randy.core;
+package core;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

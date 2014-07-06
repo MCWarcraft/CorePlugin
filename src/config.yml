@@ -5,3 +5,27 @@ sql:
   port:
   username:
   password:
+  
+##Kit config##
+kits:  
+  default:
+    cost: 0
+    upgradable:
+      weapon:
+        1:
+          STONE_SWORD
+        2:
+          DIAMOND_SWORD:
+            KNOCKBACK: 1
+            DURABILITY: 2
+          cost: 100
+      #helmet:
+      #chestplate:
+      #leggings:
+      #boots:
+      #potions:
+    hotbar:
+      1:
+    inventory:
+      1:
+

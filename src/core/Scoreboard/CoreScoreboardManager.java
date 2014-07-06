@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-import randy.core.CorePlugin;
+import core.CorePlugin;
 
 public class CoreScoreboardManager
 {

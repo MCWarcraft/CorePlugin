@@ -1,5 +1,5 @@
 name: CorePlugin
-main: randy.core.CorePlugin
+main: core.CorePlugin
 version: 1.0
 commands:
   help:
@@ -9,6 +9,9 @@ commands:
     description: 'The root command for the Honor Points Plugin'
     usage: '/<command> put bullshit here'
     permission-message: 'You don''t have <permission>'
+  kit:
+    description: Grab a kit
+    usage: /<command>
 
 permissions:
   honor.manipulate:
