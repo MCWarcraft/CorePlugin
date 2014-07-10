@@ -1,4 +1,4 @@
-package austin.CavemanSQL;
+package core.CavemanSQL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

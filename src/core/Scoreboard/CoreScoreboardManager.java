@@ -8,7 +8,6 @@ import core.CorePlugin;
 
 public class CoreScoreboardManager
 {
-	
 	private static CorePlugin plugin;
 	private static HashMap<String, DisplayBoard> boards = new HashMap<String, DisplayBoard>();
 	
@@ -31,8 +30,6 @@ public class CoreScoreboardManager
 	
 	public static DisplayBoard getDisplayBoard(String player)
 	{
-		if (boards.get(player) == null)
-			return null;
 		return boards.get(player);
 	}
 }

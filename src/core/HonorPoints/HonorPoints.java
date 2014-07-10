@@ -1,4 +1,4 @@
-package bourg.austin.HonorPoints;
+package core.HonorPoints;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

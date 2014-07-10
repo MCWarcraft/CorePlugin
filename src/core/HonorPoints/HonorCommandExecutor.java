@@ -1,4 +1,4 @@
-package bourg.austin.HonorPoints;
+package core.HonorPoints;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -188,7 +188,7 @@ public class HonorCommandExecutor implements CommandExecutor
 				return true;
 			}
 			//If the root command has been called by a player
-			else if (sender instanceof Player && sender.hasPermission("honor.see.self"))
+			else if (sender instanceof Player && sender.hasPermission("honor.view.self"))
 			{
 				sender.sendMessage(ChatColor.GREEN + "You have " + ChatColor.BLUE + DatabaseOperations.getCurrency((Player) sender) + ChatColor.GREEN + " honor");
 				return true;

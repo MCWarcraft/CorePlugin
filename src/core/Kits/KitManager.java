@@ -14,10 +14,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import austin.CavemanSQL.DatabaseConnection;
-import austin.CavemanSQL.DatabaseQueryAction;
-import austin.CavemanSQL.DatabaseUpdateAction;
 import core.CorePlugin;
+import core.CavemanSQL.DatabaseConnection;
+import core.CavemanSQL.DatabaseQueryAction;
+import core.CavemanSQL.DatabaseUpdateAction;
 
 public class KitManager
 {

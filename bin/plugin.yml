@@ -12,6 +12,9 @@ commands:
   kit:
     description: Grab a kit
     usage: /<command>
+  who:
+    description: 'Lists who is online'
+    usage: /<command>
 
 permissions:
   honor.manipulate:

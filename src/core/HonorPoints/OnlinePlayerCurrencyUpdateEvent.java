@@ -1,4 +1,4 @@
-package bourg.austin.HonorPoints;
+package core.HonorPoints;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

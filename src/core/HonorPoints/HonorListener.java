@@ -1,4 +1,4 @@
-package bourg.austin.HonorPoints;
+package core.HonorPoints;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

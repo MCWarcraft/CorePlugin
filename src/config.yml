@@ -5,7 +5,15 @@ sql:
   port:
   username:
   password:
-  
+
+who:
+  RED:
+    - rockketcher
+  GOLD:
+    - saxsalute
+    
+whomessage: ''
+
 ##Kit config##
 kits:  
   default:

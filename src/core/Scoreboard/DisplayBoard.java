@@ -47,6 +47,9 @@ public class DisplayBoard
 		this.scoreColor = scoreColor;
 		this.plugin = plugin;
 		
+		showTitle = "";
+		resetBoard();
+		
 		setTitle(title, "");
 		
 		values = new HashMap<OfflinePlayer, Score>();

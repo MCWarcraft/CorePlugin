@@ -1,4 +1,4 @@
-package austin.CavemanSQL;
+package core.CavemanSQL;
 
 public enum PrimaryType
 {

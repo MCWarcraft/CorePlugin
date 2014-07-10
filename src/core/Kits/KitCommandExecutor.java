@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import bourg.austin.HonorPoints.DatabaseOperations;
+import core.HonorPoints.DatabaseOperations;
 
 public class KitCommandExecutor implements CommandExecutor
 {
@@ -30,6 +30,8 @@ public class KitCommandExecutor implements CommandExecutor
 		
 		if (cmd.getName().equals("kit"))
 		{
+			if (!KitLockManager.canEquip(player.getName())) return true;
+			
 			//If no args are supplied
 			if (args.length == 0)
 			{
