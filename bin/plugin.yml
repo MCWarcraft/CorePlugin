@@ -33,3 +33,14 @@ permissions:
   honor.view.self:
     description: Gives access to /honor
     default: true
+    
+  core.utility.select:
+    description: Lets players select blocks with sticks
+    default: op
+    
+  core.override.drop:
+    description: Lets players drop items regardless of drop blocking
+    default: op
+  core.override.place:
+    description: Lets players place blocks regardless of block place restrictions
+    default: op

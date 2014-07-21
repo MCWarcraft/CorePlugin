@@ -1,5 +1,6 @@
 package core;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,9 +20,10 @@ public class CoreCommandExecutor implements CommandExecutor
 	{
 		if (cmd.getLabel().equalsIgnoreCase("who"))
 		{
-			sender.sendMessage(plugin.getWhoMessage());
+			sender.sendMessage(ChatColor.DARK_RED + "Owner " + ChatColor.GOLD + "Staff " + ChatColor.BLUE + "Player");
 			
-			String who = "";
+			String who = "[" + plugin.getServer().getOnlinePlayers().length + "/" + plugin.getServer().getMaxPlayers() + "]: ";
+			
 			
 			for (Player p : plugin.getServer().getOnlinePlayers())
 				who = who + plugin.getWhoColor(p.getName()) + p.getName() + " ";

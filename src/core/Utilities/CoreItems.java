@@ -25,7 +25,7 @@ public class CoreItems
 		//Watch	
 		WATCH = new ItemStack(Material.WATCH, 1);
 		tempMeta = WATCH.getItemMeta();
-		tempMeta.setDisplayName(ChatColor.GREEN + "Kits");
+		tempMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "" + ChatColor.BOLD + "Kits");
 		tempMeta.setLore(Arrays.asList("" + ChatColor.DARK_PURPLE + ChatColor.ITALIC + "Select your kit"));
 		WATCH.setItemMeta(tempMeta);
 

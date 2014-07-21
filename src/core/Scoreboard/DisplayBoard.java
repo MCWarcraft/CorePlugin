@@ -95,6 +95,11 @@ public class DisplayBoard
 		dynamicKeys.add(null);
 	}
 	
+	public void putDivider()
+	{
+		putHeader("--------------");
+	}
+	
 	public void putSpace()
 	{
 		titles.add(" ");

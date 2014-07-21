@@ -14,7 +14,8 @@ public class CoreListener implements Listener
 	}
 	
 	@EventHandler
-	public void onPlayerItemBreak(PlayerItemBreakEvent event){
+	public void onPlayerItemBreak(PlayerItemBreakEvent event)
+	{
 		event.getBrokenItem().setDurability((short)0);
 	}
 }

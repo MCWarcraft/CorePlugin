@@ -13,20 +13,24 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import core.Custody.CustodyLogoffListener;
+import core.Event.PlayerZeroHealthListener;
 import core.HonorPoints.HonorCommandExecutor;
 import core.HonorPoints.HonorListener;
 import core.HonorPoints.HonorPoints;
 import core.Kits.KitCommandExecutor;
 import core.Kits.KitManager;
 import core.Scoreboard.CoreScoreboardManager;
+import core.Utilities.BlockPlaceStopper;
 import core.Utilities.CoreItems;
+import core.Utilities.DropBlocker;
+import core.Utilities.HungerStopper;
+import core.Utilities.LocationSelector;
 
 public class CorePlugin extends JavaPlugin implements Listener
 {
 	private KitManager kitManager;
 	private HonorPoints honorPoints;
 	
-	private String whoMessage;
 	private HashMap<String, ChatColor> whoColors;
 	
 	@Override
@@ -43,7 +47,12 @@ public class CorePlugin extends JavaPlugin implements Listener
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new CoreListener(), this);
 		getServer().getPluginManager().registerEvents(new CustodyLogoffListener(), this);
-		this.getServer().getPluginManager().registerEvents(new HonorListener(), this);
+		getServer().getPluginManager().registerEvents(new HonorListener(), this);
+		getServer().getPluginManager().registerEvents(new LocationSelector(), this);
+		getServer().getPluginManager().registerEvents(new PlayerZeroHealthListener(), this);
+		getServer().getPluginManager().registerEvents(new DropBlocker(), this);
+		getServer().getPluginManager().registerEvents(new BlockPlaceStopper(), this);
+		getServer().getPluginManager().registerEvents(new HungerStopper(), this);
 		
 		//Set command executors
 		this.getCommand("who").setExecutor(new CoreCommandExecutor(this));
@@ -88,31 +97,20 @@ public class CorePlugin extends JavaPlugin implements Listener
 	}
 	
 	public void loadData()
-	{
-		System.out.println("LOADING DATA IN CORE");
-		
+	{		
 		whoColors = new HashMap<String, ChatColor>();
-		whoMessage = getConfig().getString("whomessage");
 		
 		ConfigurationSection whoSection = getConfig().getConfigurationSection("who");
 		
 		if (whoSection == null)
-		{
-			System.out.println("Null section");
 			return;
-		}
-		
-		System.out.println("Not null section");
 		
 		for (String color : whoSection.getKeys(false))
 		{
-			System.out.println(color);
-			
 			ChatColor chatColor = ChatColor.valueOf(color);
 			if (chatColor == null) continue;
 			
 			List<String> players = whoSection.getStringList(color);
-			System.out.println(players.size());
 			
 			for (String player : players)
 			{
@@ -124,12 +122,7 @@ public class CorePlugin extends JavaPlugin implements Listener
 	
 	public ChatColor getWhoColor(String playerName)
 	{		
-		if (whoColors.get(playerName.toLowerCase()) == null) return ChatColor.WHITE;
+		if (whoColors.get(playerName.toLowerCase()) == null) return ChatColor.BLUE;
 		return whoColors.get(playerName.toLowerCase());
-	}
-	
-	public String getWhoMessage()
-	{
-		return whoMessage;
 	}
 }

@@ -31,6 +31,6 @@ public class KitListener implements Listener
 	@EventHandler
 	public void onCustodySwitchEvent(CustodySwitchEvent event)
 	{
-		KitLockManager.setCanEquip(event.getPlayer().getName(), false);
+		KitLockManager.setCanNotEquip(event.getPlayer().getName());
 	}
 }

@@ -11,14 +11,14 @@ public class CustodyLogoffListener implements Listener
 	@EventHandler
 	public void playerLogoffEvent(PlayerQuitEvent event)
 	{
+		Custody.switchCustody(event.getPlayer(), "off");
 		Custody.removeCustody(event.getPlayer().getName());
-		CoreScoreboardManager.removeBoard(event.getPlayer().getName());
+		CoreScoreboardManager.removeDisplayBoard(event.getPlayer().getName());
 	}
 	
 	@EventHandler
 	public void custodySwitchEvent(CustodySwitchEvent event)
 	{
 		CoreScoreboardManager.getDisplayBoard(event.getPlayer()).resetFormat();
-		
 	}
 }

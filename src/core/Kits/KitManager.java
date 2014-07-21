@@ -76,7 +76,7 @@ public class KitManager
 		return kitPlayers.get(playerName);
 	}
 	
-	public EquippableKit getEquippableKit(Player player)
+	protected EquippableKit getEquippableKit(Player player)
 	{
 		if (kitPlayers.get(player.getName()) == null)
 			return null;

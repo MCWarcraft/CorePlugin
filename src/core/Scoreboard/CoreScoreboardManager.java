@@ -9,7 +9,7 @@ import core.CorePlugin;
 public class CoreScoreboardManager
 {
 	private static CorePlugin plugin;
-	private static HashMap<String, DisplayBoard> boards = new HashMap<String, DisplayBoard>();
+	private static HashMap<String, DisplayBoard> displayBoards = new HashMap<String, DisplayBoard>();
 	
 	public static void initialize(CorePlugin plugin)
 	{
@@ -18,18 +18,23 @@ public class CoreScoreboardManager
 	
 	public static DisplayBoard getDisplayBoard(Player player)
 	{
-		if (boards.get(player.getName()) == null)
-			boards.put(player.getName(), new DisplayBoard(player, plugin));
-		return boards.get(player.getName());
-	}
-	
-	public static void removeBoard(String playerName)
-	{
-		boards.remove(playerName);
+		if (displayBoards.get(player.getName()) == null)
+			displayBoards.put(player.getName(), new DisplayBoard(player, plugin));
+		return displayBoards.get(player.getName());
 	}
 	
 	public static DisplayBoard getDisplayBoard(String player)
 	{
-		return boards.get(player);
+		return displayBoards.get(player);
+	}
+	
+	public static GameBoard getNewGameBoard()
+	{
+		return new GameBoard();
+	}
+	
+	public static void removeDisplayBoard(String playerName)
+	{
+		displayBoards.remove(playerName);
 	}
 }

@@ -4,6 +4,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+import core.Utilities.CoreUtilities;
+
 public class EquippableKit
 {
 	private Player player;
@@ -20,7 +22,7 @@ public class EquippableKit
 	@SuppressWarnings("deprecation")
 	public void equip()
 	{
-		player.getInventory().clear();
+		CoreUtilities.resetPlayerState(player, false);
 
 		player.getInventory().addItem(kit.getPiece(KitPiece.WEAPON, kitPlayer.getPieceLevel(kit.getName(), KitPiece.WEAPON)));
 
