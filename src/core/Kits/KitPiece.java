@@ -2,7 +2,7 @@ package core.Kits;
 
 public enum KitPiece
 {
-	HELMET("helmet"), CHESTPLATE("chestplate"), LEGGINGS("leggings"), BOOTS("boots"), WEAPON("weapon");
+	HELMET("helmet"), CHESTPLATE("chestplate"), LEGGINGS("leggings"), BOOTS("boots");
 	
 	private String value;
 	

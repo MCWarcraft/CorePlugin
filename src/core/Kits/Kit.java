@@ -2,6 +2,7 @@ package core.Kits;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -11,6 +12,10 @@ public class Kit
 {
 	private HashMap<KitPiece, ArrayList<ItemStack>> upgradablePieces;
 	private HashMap<KitPiece, ArrayList<Integer>> pieceUpgradeCosts;
+	
+	private HashMap<String, ArrayList<ItemStack>> upgradableItems;
+	private HashMap<String, ArrayList<Integer>> itemUpgradeCosts;
+	
 	private ArrayList<ArrayList<PotionEffect>> potionEffects;
 	private ArrayList<Integer> potionUpgradeCosts;
 	private ItemStack[] hotbar, inventory;
@@ -41,6 +46,9 @@ public class Kit
 			pieceUpgradeCosts.put(piece, new ArrayList<Integer>());
 		}
 		
+		upgradableItems = new HashMap<String, ArrayList<ItemStack>>();
+		itemUpgradeCosts = new HashMap<String, ArrayList<Integer>>();
+		
 		potionEffects = new ArrayList<ArrayList<PotionEffect>>();
 		potionUpgradeCosts = new ArrayList<Integer>();
 	}
@@ -54,6 +62,68 @@ public class Kit
 		}
 	}
 	
+	public ItemStack getPiece(KitPiece piece, int pieceLevel)
+	{
+		if (!finalized) return null;
+		if (pieceLevel <= getMaxPieceLevel(piece))
+			return upgradablePieces.get(piece).get(pieceLevel - 1);
+		return null;
+	}
+	
+	public int getMaxPieceLevel(KitPiece piece)
+	{
+		if (!finalized) return -1;
+		return upgradablePieces.get(piece).size();
+	}
+	
+	public int getPieceUpgradeCost(KitPiece piece, int level)
+	{
+		if (pieceUpgradeCosts.get(piece).get(level - 1) != null)
+			return pieceUpgradeCosts.get(piece).get(level - 1);
+		return 0;
+	}
+	
+	public void addItem(String pieceName, ItemStack item, int cost)
+	{
+		if (!finalized)
+		{
+			//Test for defined pieces
+			if (upgradableItems.get(pieceName) == null)
+				upgradableItems.put(pieceName, new ArrayList<ItemStack>());
+			if (itemUpgradeCosts.get(pieceName) == null)
+				itemUpgradeCosts.put(pieceName, new ArrayList<Integer>());
+			
+			upgradableItems.get(pieceName).add(item);
+			itemUpgradeCosts.get(pieceName).add(cost);
+		}
+	}
+	
+	public ItemStack getItem(String itemName, int itemLevel)
+	{
+		if (!finalized) return null;
+		if (itemLevel <= getMaxItemLevel(itemName))
+			return upgradableItems.get(itemName).get(itemLevel - 1);
+		return null;
+	}
+	
+	public int getMaxItemLevel(String itemName)
+	{
+		if (!finalized) return -1;
+		return upgradableItems.get(itemName).size();
+	}
+	
+	public int getItemUpgradeCost(String itemName, int level)
+	{
+		if (itemUpgradeCosts.get(itemName).get(level - 1) != null)
+			return itemUpgradeCosts.get(itemName).get(level - 1);
+		return 0;
+	}
+	
+	public Set<String> getItemNames()
+	{
+		return upgradableItems.keySet();
+	}
+	
 	public void addPotionEffectSet(ArrayList<PotionEffect> potionEffects, int cost)
 	{
 		if (!finalized)
@@ -63,11 +133,18 @@ public class Kit
 		}
 	}
 	
-	public int getPieceUpgradeCost(KitPiece piece, int level)
+	public ArrayList<PotionEffect> getPotionEffectSet(int potionSetLevel)
 	{
-		if (pieceUpgradeCosts.get(piece).get(level - 1) != null)
-			return pieceUpgradeCosts.get(piece).get(level - 1);
-		return 0;
+		if (!finalized) return null;
+		if (potionSetLevel > getMaxPotionEffectSetLevel()) return null;
+		
+		return potionEffects.get(potionSetLevel - 1);
+	}
+	
+	public int getMaxPotionEffectSetLevel()
+	{
+		if (!finalized) return -1;
+		return potionEffects.size();
 	}
 	
 	public int getPotionUpgradeCost(int level)
@@ -102,34 +179,6 @@ public class Kit
 	public int getCost()
 	{
 		return cost;
-	}
-	
-	public ItemStack getPiece(KitPiece piece, int pieceLevel)
-	{
-		if (!finalized) return null;
-		if (pieceLevel <= getMaxPieceLevel(piece))
-			return upgradablePieces.get(piece).get(pieceLevel - 1);
-		return null;
-	}
-	
-	public ArrayList<PotionEffect> getPotionEffectSet(int potionSetLevel)
-	{
-		if (!finalized) return null;
-		if (potionSetLevel > getMaxPotionEffectSetLevel()) return null;
-		
-		return potionEffects.get(potionSetLevel - 1);
-	}
-	
-	public int getMaxPieceLevel(KitPiece piece)
-	{
-		if (!finalized) return -1;
-		return upgradablePieces.get(piece).size();
-	}
-	
-	public int getMaxPotionEffectSetLevel()
-	{
-		if (!finalized) return -1;
-		return potionEffects.size();
 	}
 	
 	public ItemStack[] getHotbarItems()

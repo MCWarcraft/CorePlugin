@@ -186,7 +186,11 @@ public class DisplayBoard
 		try {scrollTask.cancel();} catch (NullPointerException e){}
 		
 		if (scrollable.length() + steady.length() <= 16)
+		{			
 			showTitle = steady + scrollable;	
+			//TODO may be broken
+			o.setDisplayName(showTitle);
+		}
 		else
 		{
 			steadyTitle = steady;

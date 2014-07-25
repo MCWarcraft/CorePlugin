@@ -13,19 +13,17 @@ public class GameBoard
 	
 	private Objective o;
 	
-	protected GameBoard(String title)
+	protected GameBoard()
 	{
 		board = Bukkit.getScoreboardManager().getNewScoreboard();
 		o = board.registerNewObjective("test", "dummy");
-		o.setDisplayName(title);
+		o.setDisplayName("");
 		o.setDisplaySlot(DisplaySlot.SIDEBAR);
-		
-		o.setDisplayName(title);
 	}
 	
-	protected GameBoard()
+	public void setTitle(String title)
 	{
-		this("");
+		o.setDisplayName(title);
 	}
 	
 	public void setScore(OfflinePlayer player, int score)

@@ -48,6 +48,8 @@ public class KitManager
 		
 		loadKits();
 		generateKitTables();
+		
+		KitScoreboardConnector.initialize(this);
 	}
 	
 	public void shutdown()
@@ -118,6 +120,7 @@ public class KitManager
 					ConfigurationSection levelSection = pieceSection.getConfigurationSection(levelNumber);
 					
 					int cost = 0;
+					int quantity = 1;
 					
 					String itemName = "";
 					ItemStack tempStack;
@@ -138,6 +141,8 @@ public class KitManager
 						{
 							if (enchantName.equalsIgnoreCase("cost"))
 								cost = itemSection.getInt("cost");
+							else if (enchantName.equalsIgnoreCase("quantity"))
+								quantity = itemSection.getInt("quantity");
 							else
 								tempStack.addEnchantment(Enchantment.getByName(enchantName), itemSection.getInt(enchantName));
 						}
@@ -150,9 +155,13 @@ public class KitManager
 						tempStack = new ItemStack(Material.getMaterial(itemName));
 					}
 					
+					tempStack.setAmount(quantity);
+					
 					//Add piece to the temp kit
-					tempKit.addPiece(kitPieceMap.get(pieceName), tempStack, cost);	
-
+					if (kitPieceMap.get(pieceName) != null)
+						tempKit.addPiece(kitPieceMap.get(pieceName), tempStack, cost);
+					else
+						tempKit.addItem(pieceName, tempStack, cost);
 				}
 			}
 			
@@ -206,27 +215,31 @@ public class KitManager
 	
 	public void generateKitTables()
 	{
-		PreparedStatement openPlayerDataStatement;
+		PreparedStatement openKitTableStatement;
 		try
 		{
-
 			for (String kitName : kits.keySet())
 			{
 				//Configure main player data table
-				openPlayerDataStatement = databaseConnection.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS kit_" + kitName +
+				String openKitTableString = "CREATE TABLE IF NOT EXISTS kit_" + kitName +
 						"( player varchar(17) not null," +
-							"unlocked boolean DEFAULT " + (kitName.equalsIgnoreCase("default") ? "1" : "0") + "," +
-							"potions int DEFAULT 1," +
-							"weapon int DEFAULT 1," +
-							"helmet int DEFAULT 1," +
-							"chestplate int DEFAULT 1," +
-							"leggings int DEFAULT 1," +
-							"boots int DEFAULT 1," +
-							"PRIMARY KEY (player) " +
-						")");
+						"unlocked boolean DEFAULT " + (kitName.equalsIgnoreCase("default") ? "1" : "0") + "," +
+						"potions int DEFAULT 1," +
+						//
+						"helmet int DEFAULT 1," +
+						"chestplate int DEFAULT 1," +
+						"leggings int DEFAULT 1," +
+						"boots int DEFAULT 1,";
+				
+				for (String itemName : kits.get(kitName).getItemNames())
+					openKitTableString = openKitTableString + itemName + " int DEFAULT 1,";
 
-				openPlayerDataStatement.execute();
-				openPlayerDataStatement.close();
+				openKitTableString = openKitTableString + "PRIMARY KEY (player))";
+				
+				openKitTableStatement = databaseConnection.getConnection().prepareStatement(openKitTableString);
+
+				openKitTableStatement.execute();
+				openKitTableStatement.close();
 			}
 		}
 		catch (SQLException e)
@@ -257,6 +270,9 @@ public class KitManager
 					kitPlayer.upgradePotionSet(kitName, results.getInt("potions"));
 					for (KitPiece piece : KitPiece.values())
 						kitPlayer.upgradePiece(kitName, piece, results.getInt(piece.toString()));
+					
+					for (String itemName : kits.get(kitName).getItemNames())
+						kitPlayer.upgradeItem(kitName, itemName, results.getInt(itemName));
 				}
 			}
 			catch (SQLException e)
@@ -281,11 +297,13 @@ public class KitManager
 			if (kitPlayer.isKitUnlocked(kitName))
 			{
 				updateAction.setInt("potions", kitPlayer.getPotionLevel(kitName));
-				updateAction.setInt("weapon", kitPlayer.getPieceLevel(kitName, KitPiece.WEAPON));
 				updateAction.setInt("helmet", kitPlayer.getPieceLevel(kitName, KitPiece.HELMET));
 				updateAction.setInt("chestplate", kitPlayer.getPieceLevel(kitName, KitPiece.CHESTPLATE));
 				updateAction.setInt("leggings", kitPlayer.getPieceLevel(kitName, KitPiece.LEGGINGS));
 				updateAction.setInt("boots", kitPlayer.getPieceLevel(kitName, KitPiece.BOOTS));
+				
+				for (String itemName : kits.get(kitName).getItemNames())
+					updateAction.setInt(itemName, kitPlayer.getItemLevel(kitName, itemName));
 			}
 			
 			updateAction.executeUpdate();

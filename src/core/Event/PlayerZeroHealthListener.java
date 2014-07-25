@@ -1,16 +1,27 @@
 package core.Event;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerZeroHealthListener implements Listener
 {	
-	@EventHandler
+	private HashMap<String, Player> damagers;
+	
+	public PlayerZeroHealthListener()
+	{
+		damagers = new HashMap<String, Player>();
+	}
+	
+	@EventHandler (priority = EventPriority.HIGH)
 	public void onPlayerZeroHealthEvent(EntityDamageEvent event)
 	{
 		if (event.getEntity() == null)
@@ -22,7 +33,17 @@ public class PlayerZeroHealthListener implements Listener
 		
 		//If the player has dipped below 0 HP
 		if (damagedPlayer.getHealth() - getDamageArmored(damagedPlayer, event.getDamage()) <= 0)
-			Bukkit.getServer().getPluginManager().callEvent(new PlayerZeroHealthEvent(damagedPlayer));
+			Bukkit.getServer().getPluginManager().callEvent(new PlayerZeroHealthEvent(damagedPlayer, event.getCause(), damagers.get(damagedPlayer.getName())));
+	
+		damagers.remove(damagedPlayer.getName());
+	}
+	
+	@EventHandler (priority = EventPriority.HIGHEST)
+	public void onPlayerZeroHealthEvent(EntityDamageByEntityEvent event)
+	{
+		if (!(event.getDamager() instanceof Player && event.getEntity() instanceof Player))
+			return;
+		damagers.put(((Player) event.getEntity()).getName(), ((Player) event.getDamager()));
 	}
 	
 	private double getDamageArmored(Player player, double raw)

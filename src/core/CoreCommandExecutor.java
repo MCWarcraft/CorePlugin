@@ -20,7 +20,7 @@ public class CoreCommandExecutor implements CommandExecutor
 	{
 		if (cmd.getLabel().equalsIgnoreCase("who"))
 		{
-			sender.sendMessage(ChatColor.DARK_RED + "Owner " + ChatColor.GOLD + "Staff " + ChatColor.BLUE + "Player");
+			sender.sendMessage(ChatColor.RED + "Owner " + ChatColor.GOLD + "Staff " + ChatColor.BLUE + "Player");
 			
 			String who = "[" + plugin.getServer().getOnlinePlayers().length + "/" + plugin.getServer().getMaxPlayers() + "]: ";
 			

@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import core.HonorPoints.DatabaseOperations;
+import core.Scoreboard.CoreScoreboardManager;
 
 public class KitCommandExecutor implements CommandExecutor
 {
@@ -30,11 +31,11 @@ public class KitCommandExecutor implements CommandExecutor
 		
 		if (cmd.getName().equals("kit"))
 		{
-			if (!KitLockManager.canEquip(player.getName())) return true;
-			
 			//If no args are supplied
 			if (args.length == 0)
 			{
+				if (!KitLockManager.canEquip(player.getName())) return true;
+				
 				//Equip kit
 				kitManager.getEquippableKit(player).equip();
 				player.sendMessage(ChatColor.GREEN + "You have equipped the kit '" + kitManager.getKitPlayer(player.getName()).getSelectedKit() + "'");
@@ -169,6 +170,30 @@ public class KitCommandExecutor implements CommandExecutor
 								else
 									player.sendMessage(ChatColor.RED + "There are no remaining potion upgrades");
 							}
+							//Else if it's another kit piece
+							else if (kit.getItemNames().contains(args[2]))
+							{
+								//If the kit being upgraded has available upgrades
+								if (kitPlayer.hasRemainingItemUpgrades(args[1], args[2]))
+								{
+									int cost = kit.getItemUpgradeCost(args[2], kitPlayer.getItemLevel(args[1], args[2]) + 1);
+									
+									//If the player can afford the upgrade
+									if (DatabaseOperations.getCurrency(player) >= cost)
+									{
+										DatabaseOperations.setCurrency(player, DatabaseOperations.getCurrency(player) - cost);
+										kitPlayer.upgradeItem(args[1], args[2]);
+
+										player.sendMessage(ChatColor.GREEN + "You have successfully purchased an upgrade for the kit '" + args[1] + "'.");
+									}
+									//If the player can't afford the upgrade
+									else
+										player.sendMessage(ChatColor.RED + "The next upgrade costs " + cost + " Honor.");										
+								}
+								//If the kit being upgraded has no available upgrades
+								else
+									player.sendMessage(ChatColor.RED + "There are no remaining upgrades for the piece '" + args[2] + "'");
+							}
 							//If the kit piece isn't real
 							else
 								player.sendMessage(ChatColor.RED + args[2] + " isn't a valid piece.");
@@ -256,6 +281,8 @@ public class KitCommandExecutor implements CommandExecutor
 							{
 								kitPlayer.setSelectedKit(args[1]);
 								player.sendMessage(ChatColor.GREEN + "You have equipped " + args[1]);
+
+								CoreScoreboardManager.getDisplayBoard(player.getName()).update(false);
 							}
 							//If the player doesn't own the kit in question
 							else

@@ -7,6 +7,7 @@ public class KitPlayer
 	private String playerName;
 	
 	private HashMap<String, HashMap<KitPiece, Integer>> pieceLevelMap;
+	private HashMap<String, HashMap<String, Integer>> itemLevelMap;
 	private HashMap<String, Integer> potionLevelMap;
 	private HashMap<String, Boolean> kitUnlockMap;
 	
@@ -17,6 +18,7 @@ public class KitPlayer
 	{
 		this.playerName = playerName;
 		pieceLevelMap = new HashMap<String, HashMap<KitPiece, Integer>>();
+		itemLevelMap = new HashMap<String, HashMap<String, Integer>>();
 		potionLevelMap = new HashMap<String, Integer>();
 		kitUnlockMap = new HashMap<String, Boolean>();
 		 
@@ -33,6 +35,9 @@ public class KitPlayer
 		pieceLevelMap.put(kitName, new HashMap<KitPiece, Integer>());
 		for (KitPiece piece : KitPiece.values())
 			pieceLevelMap.get(kitName).put(piece, 1);
+		itemLevelMap.put(kitName, new HashMap<String, Integer>());
+		for (String itemName : kitManager.getKit(name).getItemNames())
+			itemLevelMap.get(kitName).put(itemName, 1);
 		potionLevelMap.put(kitName, 1);
 	}
 	
@@ -58,10 +63,40 @@ public class KitPlayer
 		return upgradePiece(kitName, piece, getPieceLevel(kitName, piece) + 1);
 	}
 	
+	public boolean upgradeItem(String name, String itemName, int itemLevel)
+	{
+		String kitName = name.toLowerCase();
+		
+		HashMap<String, Integer> items = itemLevelMap.get(kitName);
+		if (items == null) return false;
+		if (kitManager.getKit(kitName) == null) return false;
+		
+		int assignItemLevel = itemLevel;
+		
+		if (kitManager.getKit(kitName).getMaxItemLevel(itemName) <= itemLevel)
+			assignItemLevel = kitManager.getKit(kitName).getMaxItemLevel(itemName);
+		
+		items.put(itemName, assignItemLevel);
+		return true;
+	}
+	
+	public boolean upgradeItem(String kitName, String itemName)
+	{
+		return upgradeItem(kitName, itemName, getItemLevel(kitName, itemName) + 1);
+	}
+	
 	public boolean hasRemainingUpgrades(String name, KitPiece piece)
 	{
 		String kitName = name.toLowerCase();
 		if (kitManager.getKit(kitName).getMaxPieceLevel(piece) > getPieceLevel(kitName, piece))
+			return true;
+		return false;
+	}
+	
+	public boolean hasRemainingItemUpgrades(String name, String itemName)
+	{
+		String kitName = name.toLowerCase();
+		if (kitManager.getKit(kitName).getMaxItemLevel(itemName) > getItemLevel(kitName, itemName))
 			return true;
 		return false;
 	}
@@ -109,6 +144,11 @@ public class KitPlayer
 	public int getPieceLevel(String kitName, KitPiece piece)
 	{
 		return pieceLevelMap.get(kitName).get(piece);
+	}
+	
+	public int getItemLevel(String kitName, String itemName)
+	{
+		return itemLevelMap.get(kitName).get(itemName);
 	}
 	
 	public int getPotionLevel(String kitName)

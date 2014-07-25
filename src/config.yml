@@ -25,6 +25,7 @@ kits:
             KNOCKBACK: 1
             DURABILITY: 2
           cost: 100
+          quantity: 1
       #helmet:
       #chestplate:
       #leggings:
