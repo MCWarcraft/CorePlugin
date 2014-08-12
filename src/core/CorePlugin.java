@@ -11,14 +11,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import core.Custody.CustodyLogoffListener;
 import core.Event.PlayerZeroHealthListener;
 import core.HonorPoints.HonorCommandExecutor;
-import core.HonorPoints.HonorListener;
 import core.HonorPoints.HonorPoints;
 import core.Kits.KitCommandExecutor;
 import core.Kits.KitManager;
+import core.Save.CoreSaveExecutor;
 import core.Scoreboard.CoreScoreboardManager;
 import core.Utilities.BlockPlaceStopper;
 import core.Utilities.CoreItems;
@@ -34,12 +35,13 @@ public class CorePlugin extends JavaPlugin implements Listener
 	private HashMap<String, ChatColor> whoColors;
 	
 	@Override
-	public void onEnable() {
+	public void onEnable()
+	{
 		this.saveDefaultConfig();
 		
 		//Initialize managers
 		honorPoints = new HonorPoints(this.getConfig().getString("sql.ip"), this.getConfig().getString("sql.port"), this.getConfig().getString("sql.database"), this.getConfig().getString("sql.username"), this.getConfig().getString("sql.password"));
-		kitManager = new KitManager(this);	
+		kitManager = new KitManager(this);
 		
 		loadData();
 		
@@ -47,17 +49,18 @@ public class CorePlugin extends JavaPlugin implements Listener
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new CoreListener(), this);
 		getServer().getPluginManager().registerEvents(new CustodyLogoffListener(), this);
-		getServer().getPluginManager().registerEvents(new HonorListener(), this);
 		getServer().getPluginManager().registerEvents(new LocationSelector(), this);
 		getServer().getPluginManager().registerEvents(new PlayerZeroHealthListener(), this);
 		getServer().getPluginManager().registerEvents(new DropBlocker(), this);
 		getServer().getPluginManager().registerEvents(new BlockPlaceStopper(), this);
 		getServer().getPluginManager().registerEvents(new HungerStopper(), this);
+		getServer().getPluginManager().registerEvents(honorPoints, this);		
 		
 		//Set command executors
 		this.getCommand("who").setExecutor(new CoreCommandExecutor(this));
 		this.getCommand("honor").setExecutor(new HonorCommandExecutor());
 		this.getCommand("kit").setExecutor(new KitCommandExecutor(kitManager));
+		this.getCommand("coresave").setExecutor(new CoreSaveExecutor());
 		
 		//Start CoreScoreboardManager
 		CoreScoreboardManager.initialize(this);
@@ -113,11 +116,16 @@ public class CorePlugin extends JavaPlugin implements Listener
 			List<String> players = whoSection.getStringList(color);
 			
 			for (String player : players)
-			{
 				whoColors.put(player.toLowerCase(), chatColor);
-				getServer().getLogger().info(chatColor + player);
-			}
 		}
+		
+		new BukkitRunnable()
+		{
+			public void run()
+			{
+				return;
+			}
+		}.runTaskTimer(this, getConfig().getInt("savetime") * 20, getConfig().getInt("savetime") * 20);
 	}
 	
 	public ChatColor getWhoColor(String playerName)

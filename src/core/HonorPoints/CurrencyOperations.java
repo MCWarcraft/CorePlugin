@@ -7,13 +7,13 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-public class DatabaseOperations
+public class CurrencyOperations
 {
 	private static HonorPoints plugin;
 	
 	public static void initialize(HonorPoints plugin)
 	{
-		DatabaseOperations.plugin = plugin;
+		CurrencyOperations.plugin = plugin;
 	}
 	
 	public static synchronized void addPlayer(OfflinePlayer p)

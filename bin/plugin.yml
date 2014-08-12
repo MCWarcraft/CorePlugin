@@ -15,6 +15,9 @@ commands:
   who:
     description: 'Lists who is online'
     usage: /<command>
+  coresave:
+    description: 'Forces a server save'
+    usage: /<command
 
 permissions:
   honor.manipulate:
@@ -43,4 +46,8 @@ permissions:
     default: op
   core.override.place:
     description: Lets players place blocks regardless of block place restrictions
+    default: op
+    
+  core.forcesave:
+    description: Allows a force save of the server
     default: op

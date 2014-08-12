@@ -8,6 +8,6 @@ public class HonorConnector implements ScoreboardValue
 {
 	public String getScoreboardValue(String key)
 	{
-		return "" + DatabaseOperations.getCurrency(Bukkit.getOfflinePlayer(key));
+		return "" + CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(key));
 	}
 }

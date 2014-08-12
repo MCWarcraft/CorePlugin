@@ -111,9 +111,10 @@ public class DisplayBoard
 	public void update(boolean forceshow)
 	{
 		resetBoard();
-		ArrayList<String> finalStrings = padDuplicates(constructLines());
-		values.clear();
 		
+		ArrayList<String> finalStrings = padDuplicates(constructLines());
+		
+		values.clear();
 		for (int i = 0; i < finalStrings.size(); i++)
 		{
 			values.put(Bukkit.getOfflinePlayer(finalStrings.get(i)), o.getScore(Bukkit.getOfflinePlayer(finalStrings.get(i))));
@@ -136,21 +137,23 @@ public class DisplayBoard
 	}
 	
 	private String constructLine(int line)
-	{		
+	{
+		String ret = "";
+		
 		//If dynamic value
 		if (fixedValues.get(line) == null && dynamicValues.get(line) != null)
-		{
-			return titles.get(line) + scoreColor + dynamicValues.get(line).getScoreboardValue(dynamicKeys.get(line));
-		}
+			ret = titles.get(line) + scoreColor + dynamicValues.get(line).getScoreboardValue(dynamicKeys.get(line));
 		//If static value
 		else if (dynamicValues.get(line) == null && fixedValues.get(line) != null)
-			return titles.get(line) + scoreColor + fixedValues.get(line);
+			ret = titles.get(line) + scoreColor + fixedValues.get(line);
 		//If header
 		else if (dynamicValues.get(line) == null && fixedValues.get(line) == null && titles.get(line) != null)
-			return titles.get(line);
+			ret =  titles.get(line);
 		//Else if it's just a space
 		else
-			return " ";
+			return ret = " ";
+		
+		return ret;
 	}
 	
 	private ArrayList<String> constructLines()
@@ -158,6 +161,7 @@ public class DisplayBoard
 		ArrayList<String> lines = new ArrayList<String>();
 		for (int i = 0; i < titles.size(); i++)
 			lines.add(constructLine(i));
+		
 		return lines;
 	}
 	

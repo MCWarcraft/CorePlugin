@@ -105,8 +105,7 @@ public class DatabaseUpdateAction
 	 * @return true unless primary key is not set
 	 */
 	public boolean executeUpdate()
-	{
-		
+	{		
 		if (primaryType == PrimaryType.NOT_SET) return false;
 		PreparedStatement saveStatement = null;
 		try
@@ -139,7 +138,7 @@ public class DatabaseUpdateAction
 			statementString = statementString.substring(0, statementString.length() - 1) + " " + (dataExists ? "WHERE " + primaryKeyName +"=?" : "," + primaryKeyName + "=?");
 			
 			saveStatement = connection.prepareStatement(statementString);
-
+			
 			int number = 1;
 			for (String key : stringValues.keySet())
 			{

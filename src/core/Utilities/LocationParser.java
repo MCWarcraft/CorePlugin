@@ -49,4 +49,37 @@ public class LocationParser
 		
 		return new Location(world, x, y, z).setDirection(new Vector().setX(facingX).setZ(facingZ));
 	}
+	
+	public static String vectorToString(Vector vec)
+	{
+		if (vec == null)
+		{
+			return "null";
+		}
+		
+		return (vec.getBlockX() + "|" + vec.getBlockY() + "|" + vec.getBlockZ());
+	}
+	
+	public static Vector parseVector(String unparsed)
+	{		
+		if (unparsed == null || unparsed.equalsIgnoreCase("null"))
+			return null;
+		
+		
+		String[] coords = unparsed.split("\\|");
+		double x, y, z;
+		
+		try
+		{
+			x = Double.parseDouble(coords[0]);
+			y = Double.parseDouble(coords[1]);
+			z = Double.parseDouble(coords[2]);
+		}
+		catch (NumberFormatException e)
+		{
+			return null;
+		}
+		
+		return new Vector(x, y, z);
+	}
 }

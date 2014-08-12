@@ -11,6 +11,8 @@ who:
     - rockketcher
   GOLD:
     - saxsalute
+    
+savetime: 300
 
 ##Kit config##
 kits:  

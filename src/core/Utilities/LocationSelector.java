@@ -42,12 +42,16 @@ public class LocationSelector implements Listener
 			selectStage.put(player.getName(), 0);
 		
 		//If player is holding a stick
-		if (player.getItemInHand().getType().equals(Material.STICK) && player.hasPermission("core.utility.select") && event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+		if ((player.getItemInHand().getType() == Material.STICK || player.getItemInHand().getType() == Material.BONE) && player.hasPermission("core.utility.select") && event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 		{
 			if (selectStage.get(player.getName()) == 0)
 			{
 				//Store the click
-				LocationSelector.setSelectedLocation(player.getName(), event.getClickedBlock().getLocation());
+				if (player.getItemInHand().getType() == Material.BONE)
+					LocationSelector.setSelectedLocation(player.getName(), event.getClickedBlock().getLocation().add(new Vector(0, 1, 0)));
+				else
+					LocationSelector.setSelectedLocation(player.getName(), event.getClickedBlock().getLocation());
+				
 				player.sendMessage(ChatColor.YELLOW + "Location Selected");
 				selectStage.put(player.getName(), 1);
 			}

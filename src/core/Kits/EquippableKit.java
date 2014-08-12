@@ -27,7 +27,6 @@ public class EquippableKit
 		for (String itemName : kit.getItemNames())
 		{
 			player.getInventory().addItem(kit.getItem(itemName, kitPlayer.getItemLevel(kit.getName(), itemName)));
-			System.out.println(kit.getItem(itemName, kitPlayer.getItemLevel(kit.getName(), itemName)).getAmount());
 		}
 		player.getInventory().setHelmet(kit.getPiece(KitPiece.HELMET, kitPlayer.getPieceLevel(kit.getName(), KitPiece.HELMET)));
 		player.getInventory().setChestplate(kit.getPiece(KitPiece.CHESTPLATE, kitPlayer.getPieceLevel(kit.getName(), KitPiece.CHESTPLATE)));

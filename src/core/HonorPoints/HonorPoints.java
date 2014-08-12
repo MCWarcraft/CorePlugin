@@ -5,7 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class HonorPoints
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
+
+public class HonorPoints implements Listener
 {	
 	private Connection connection;
 	
@@ -19,10 +23,10 @@ public class HonorPoints
 		this.username = username;
 		this.password = password;
 		
+		CurrencyOperations.initialize(this);
+		
 		openConnection();
 		checkDatabase();
-		
-		DatabaseOperations.initialize(this);
 	}
 	
 	public synchronized boolean openConnection()
@@ -77,5 +81,11 @@ public class HonorPoints
 	public Connection getConnection()
 	{
 		return connection;
+	}
+	
+	@EventHandler
+	public void playerLoginEvent(PlayerLoginEvent event)
+	{
+		CurrencyOperations.addPlayer(event.getPlayer());
 	}
 }

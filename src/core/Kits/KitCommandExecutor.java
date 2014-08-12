@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import core.HonorPoints.DatabaseOperations;
+import core.HonorPoints.CurrencyOperations;
 import core.Scoreboard.CoreScoreboardManager;
 
 public class KitCommandExecutor implements CommandExecutor
@@ -61,10 +61,10 @@ public class KitCommandExecutor implements CommandExecutor
 							if (!kitPlayer.isKitUnlocked(args[1]))
 							{
 								//If the player can afford the kit
-								if (DatabaseOperations.getCurrency(player) >= cost)
+								if (CurrencyOperations.getCurrency(player) >= cost)
 								{
 									//Give them the kit
-									DatabaseOperations.setCurrency(player, DatabaseOperations.getCurrency(player) - cost);
+									CurrencyOperations.setCurrency(player, CurrencyOperations.getCurrency(player) - cost);
 									kitPlayer.unlockKit(args[1]);
 									
 									player.sendMessage(ChatColor.GREEN + "You have successfully purchased the kit '" + args[1] + "'.");
@@ -96,7 +96,7 @@ public class KitCommandExecutor implements CommandExecutor
 						if (kit != null)
 						{
 							player.sendMessage(ChatColor.GREEN + args[1] + " costs " + kit.getCost() + " honor.");
-							player.sendMessage(kitManager.getKitPlayer(player.getName()).isKitUnlocked(args[1]) ? ChatColor.GREEN + "However, you already own it!" : ((kit.getCost() > DatabaseOperations.getCurrency(player)) ? ChatColor.DARK_RED + "You can't afford it." : ChatColor.GREEN + "You can afford it!"));
+							player.sendMessage(kitManager.getKitPlayer(player.getName()).isKitUnlocked(args[1]) ? ChatColor.GREEN + "However, you already own it!" : ((kit.getCost() > CurrencyOperations.getCurrency(player)) ? ChatColor.DARK_RED + "You can't afford it." : ChatColor.GREEN + "You can afford it!"));
 						}
 						//If the kit doesn't exist
 						else
@@ -131,9 +131,9 @@ public class KitCommandExecutor implements CommandExecutor
 									int cost = kit.getPieceUpgradeCost(piece, kitPlayer.getPieceLevel(args[1], piece) + 1);
 									
 									//If the player can afford the upgrade
-									if (DatabaseOperations.getCurrency(player) >= cost)
+									if (CurrencyOperations.getCurrency(player) >= cost)
 									{
-										DatabaseOperations.setCurrency(player, DatabaseOperations.getCurrency(player) - cost);
+										CurrencyOperations.setCurrency(player, CurrencyOperations.getCurrency(player) - cost);
 										kitPlayer.upgradePiece(args[1], piece);
 
 										player.sendMessage(ChatColor.GREEN + "You have successfully purchased an upgrade for the kit '" + args[1] + "'.");
@@ -155,9 +155,9 @@ public class KitCommandExecutor implements CommandExecutor
 									int cost = kit.getPotionUpgradeCost(kitPlayer.getPotionLevel(args[1]) + 1);
 									
 									//If the player can afford the upgrade
-									if (DatabaseOperations.getCurrency(player) >= cost)
+									if (CurrencyOperations.getCurrency(player) >= cost)
 									{
-										DatabaseOperations.setCurrency(player, DatabaseOperations.getCurrency(player) - cost);
+										CurrencyOperations.setCurrency(player, CurrencyOperations.getCurrency(player) - cost);
 										kitPlayer.upgradePotionSet(args[1]);
 
 										player.sendMessage(ChatColor.GREEN + "You have successfully purchased an upgrade for the kit '" + args[1] + "'.");
@@ -179,9 +179,9 @@ public class KitCommandExecutor implements CommandExecutor
 									int cost = kit.getItemUpgradeCost(args[2], kitPlayer.getItemLevel(args[1], args[2]) + 1);
 									
 									//If the player can afford the upgrade
-									if (DatabaseOperations.getCurrency(player) >= cost)
+									if (CurrencyOperations.getCurrency(player) >= cost)
 									{
-										DatabaseOperations.setCurrency(player, DatabaseOperations.getCurrency(player) - cost);
+										CurrencyOperations.setCurrency(player, CurrencyOperations.getCurrency(player) - cost);
 										kitPlayer.upgradeItem(args[1], args[2]);
 
 										player.sendMessage(ChatColor.GREEN + "You have successfully purchased an upgrade for the kit '" + args[1] + "'.");
@@ -230,7 +230,7 @@ public class KitCommandExecutor implements CommandExecutor
 								{
 									int cost = kit.getPieceUpgradeCost(piece, kitPlayer.getPieceLevel(args[1], piece) + 1);
 									player.sendMessage(ChatColor.GREEN + "The next upgrade costs " + cost + " Honor.");
-									player.sendMessage((cost > DatabaseOperations.getCurrency(player)) ? ChatColor.DARK_RED + "You can't afford it." : ChatColor.GREEN + "You can afford it!");
+									player.sendMessage((cost > CurrencyOperations.getCurrency(player)) ? ChatColor.DARK_RED + "You can't afford it." : ChatColor.GREEN + "You can afford it!");
 								}
 								//If the kit being upgraded has no available upgrades
 								else
@@ -244,7 +244,7 @@ public class KitCommandExecutor implements CommandExecutor
 								{
 									int cost = kit.getPotionUpgradeCost(kitPlayer.getPotionLevel(args[1]) + 1);
 									player.sendMessage(ChatColor.GREEN + "The next upgrade costs " + cost + " Honor.");
-									player.sendMessage((cost > DatabaseOperations.getCurrency(player)) ? ChatColor.DARK_RED + "You can't afford it." : ChatColor.GREEN + "You can afford it!");
+									player.sendMessage((cost > CurrencyOperations.getCurrency(player)) ? ChatColor.DARK_RED + "You can't afford it." : ChatColor.GREEN + "You can afford it!");
 									
 								}
 								//If the kit being upgraded has no available upgrades

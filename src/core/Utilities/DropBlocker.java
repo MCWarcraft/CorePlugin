@@ -27,6 +27,10 @@ public class DropBlocker implements Listener
 			event.setCancelled(false);
 			return;
 		}
+		else if (event.getItemDrop().getItemStack().getItemMeta().equals(CoreItems.COMPASS.getItemMeta()) ||
+				event.getItemDrop().getItemStack().getItemMeta().equals(CoreItems.WATCH.getItemMeta()) || 
+				event.getItemDrop().getItemStack().getItemMeta().equals(CoreItems.NETHER_STAR.getItemMeta()))
+			event.setCancelled(true);
 		else if (!dropAllowed.contains(event.getPlayer().getName()))
 			event.setCancelled(true);
 	}
