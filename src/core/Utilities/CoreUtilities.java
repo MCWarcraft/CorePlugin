@@ -3,6 +3,7 @@ package core.Utilities;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class CoreUtilities
 {
@@ -24,5 +25,10 @@ public class CoreUtilities
 		
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
+	}
+	
+	public static void deathAnimation(Player player)
+	{
+		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 30, 0));
 	}
 }
