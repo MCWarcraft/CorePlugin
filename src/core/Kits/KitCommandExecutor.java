@@ -280,7 +280,7 @@ public class KitCommandExecutor implements CommandExecutor
 							if (kitPlayer.isKitUnlocked(args[1]))
 							{
 								kitPlayer.setSelectedKit(args[1]);
-								player.sendMessage(ChatColor.GREEN + "You have equipped " + args[1]);
+								player.sendMessage(ChatColor.GREEN + "You have selected " + args[1]);
 
 								CoreScoreboardManager.getDisplayBoard(player.getName()).update(false);
 							}

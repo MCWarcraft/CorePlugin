@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -211,6 +212,9 @@ public class KitManager
 		//// END LOAD KITS ////
 		///////////////////////
 
+		for (Player p : Bukkit.getServer().getOnlinePlayers())
+			loadPlayer(p.getName());
+		
 	}
 	
 	public void generateKitTables()
