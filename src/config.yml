@@ -13,6 +13,7 @@ who:
     - saxsalute
     
 savetime: 300
+engagementtime: 5
 
 ##Kit config##
 kits:  

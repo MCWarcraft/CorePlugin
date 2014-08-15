@@ -1,5 +1,7 @@
 package core;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,7 +16,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import core.Custody.CustodyLogoffListener;
+import core.EngagementTracker.PlayerEngageListener;
 import core.Event.PlayerZeroHealthListener;
+import core.HonorPoints.CurrencyOperations;
 import core.HonorPoints.HonorCommandExecutor;
 import core.HonorPoints.HonorPoints;
 import core.Kits.KitCommandExecutor;
@@ -32,6 +36,8 @@ public class CorePlugin extends JavaPlugin implements Listener
 	private KitManager kitManager;
 	private HonorPoints honorPoints;
 	
+	private Connection connection;
+	
 	private HashMap<String, ChatColor> whoColors;
 	
 	@Override
@@ -39,8 +45,10 @@ public class CorePlugin extends JavaPlugin implements Listener
 	{
 		this.saveDefaultConfig();
 		
+		openConnection();
+		
 		//Initialize managers
-		honorPoints = new HonorPoints(this.getConfig().getString("sql.ip"), this.getConfig().getString("sql.port"), this.getConfig().getString("sql.database"), this.getConfig().getString("sql.username"), this.getConfig().getString("sql.password"));
+		honorPoints = new HonorPoints(this);
 		kitManager = new KitManager(this);
 		
 		loadData();
@@ -54,7 +62,8 @@ public class CorePlugin extends JavaPlugin implements Listener
 		getServer().getPluginManager().registerEvents(new DropBlocker(), this);
 		getServer().getPluginManager().registerEvents(new BlockPlaceStopper(), this);
 		getServer().getPluginManager().registerEvents(new HungerStopper(), this);
-		getServer().getPluginManager().registerEvents(honorPoints, this);		
+		getServer().getPluginManager().registerEvents(honorPoints, this);
+		getServer().getPluginManager().registerEvents(new PlayerEngageListener(this, getConfig().getInt("engagementtime")), this);
 		
 		//Set command executors
 		this.getCommand("who").setExecutor(new CoreCommandExecutor(this));
@@ -66,6 +75,8 @@ public class CorePlugin extends JavaPlugin implements Listener
 		CoreScoreboardManager.initialize(this);
 		CoreItems.initialize();
 		
+		CurrencyOperations.initialize(this);
+		
 		this.getServer().getLogger().info("[Core Plugin] Succesfully enabled.");
 	}
 	
@@ -74,10 +85,11 @@ public class CorePlugin extends JavaPlugin implements Listener
 	{
 		//TODO: Fix database
 		//CoreDatabase.PushChanges();
-		honorPoints.closeConnection();
+		closeConnection();
 		kitManager.shutdown();
 		//TODO Create shutdown protocol
 		//kitManager.disable();
+		closeConnection();
 		this.getServer().getLogger().info("[Core Plugin] succesfully disabled.");
 	}
 	
@@ -126,6 +138,40 @@ public class CorePlugin extends JavaPlugin implements Listener
 				return;
 			}
 		}.runTaskTimer(this, getConfig().getInt("savetime") * 20, getConfig().getInt("savetime") * 20);
+	}
+	
+	public synchronized boolean openConnection()
+	{
+		String connectionString = "jdbc:mysql://" + this.getConfig().getString("sql.ip") + ":" + this.getConfig().getString("sql.port") + "/" + this.getConfig().getString("sql.database");
+		
+		try
+		{
+			connection = DriverManager.getConnection(connectionString, this.getConfig().getString("sql.username"), this.getConfig().getString("sql.password"));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public synchronized boolean closeConnection()
+	{		
+		try
+		{
+			connection.close();
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	public Connection getConnection()
+	{
+		return connection;
 	}
 	
 	public ChatColor getWhoColor(String playerName)
