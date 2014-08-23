@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import core.Custody.CustodyLogoffListener;
 import core.EngagementTracker.PlayerEngageListener;
+import core.Event.PlayerVoidDamageListener;
 import core.Event.PlayerZeroHealthListener;
 import core.HonorPoints.CurrencyOperations;
 import core.HonorPoints.HonorCommandExecutor;
@@ -24,6 +25,7 @@ import core.HonorPoints.HonorPoints;
 import core.Kits.KitCommandExecutor;
 import core.Kits.KitManager;
 import core.Save.CoreSaveExecutor;
+import core.Save.CoreSaveManager;
 import core.Scoreboard.CoreScoreboardManager;
 import core.Utilities.BlockPlaceStopper;
 import core.Utilities.CoreItems;
@@ -59,6 +61,7 @@ public class CorePlugin extends JavaPlugin implements Listener
 		getServer().getPluginManager().registerEvents(new CustodyLogoffListener(), this);
 		getServer().getPluginManager().registerEvents(new LocationSelector(), this);
 		getServer().getPluginManager().registerEvents(new PlayerZeroHealthListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerVoidDamageListener(), this);
 		getServer().getPluginManager().registerEvents(new DropBlocker(), this);
 		getServer().getPluginManager().registerEvents(new BlockPlaceStopper(), this);
 		getServer().getPluginManager().registerEvents(new HungerStopper(), this);
@@ -85,7 +88,8 @@ public class CorePlugin extends JavaPlugin implements Listener
 	{
 		//TODO: Fix database
 		//CoreDatabase.PushChanges();
-		closeConnection();
+		CoreSaveManager.saveAll();
+		
 		kitManager.shutdown();
 		//TODO Create shutdown protocol
 		//kitManager.disable();

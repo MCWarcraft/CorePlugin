@@ -49,8 +49,10 @@ public class KitManager
 		
 		loadKits();
 		generateKitTables();
+		loadPlayer("basekitdummy");
 		
 		KitScoreboardConnector.initialize(this);
+		EquippableKitConnector.initialize(this);
 	}
 	
 	public void shutdown()
@@ -87,6 +89,14 @@ public class KitManager
 			return null;
 		
 		return new EquippableKit(player, kitPlayers.get(player.getName()), kits.get(kitPlayers.get(player.getName()).getSelectedKit()));				
+	}
+	
+	public EquippableKit getBaseEquippableKit(Player player, String kitName)
+	{
+		if (kits.get(kitName) == null)
+			return null;
+		
+		return new EquippableKit(player, kitPlayers.get("basekitdummy"), kits.get(kitName));
 	}
 	
 	public void loadKits()

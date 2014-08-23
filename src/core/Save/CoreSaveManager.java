@@ -17,8 +17,6 @@ public class CoreSaveManager
 	
 	public static void saveAll()
 	{
-		Bukkit.getServer().getLogger().info("" + System.currentTimeMillis());
-		
 		for (Player p : Bukkit.getServer().getOnlinePlayers())
 			p.sendMessage(ChatColor.BLUE + "Core Plugins Saving. Please forgive any delay.");
 		
@@ -27,7 +25,5 @@ public class CoreSaveManager
 			
 		for (Player p : Bukkit.getServer().getOnlinePlayers())
 			p.sendMessage(ChatColor.BLUE + "Core Plugins Saved.");
-		
-		Bukkit.getServer().getLogger().info("" + System.currentTimeMillis());
 	}
 }
