@@ -2,7 +2,6 @@ package core.Kits;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +14,7 @@ public class Kit
 	
 	private HashMap<String, ArrayList<ItemStack>> upgradableItems;
 	private HashMap<String, ArrayList<Integer>> itemUpgradeCosts;
+	private ArrayList<String> orderedItems;
 	
 	private ArrayList<ArrayList<PotionEffect>> potionEffects;
 	private ArrayList<Integer> potionUpgradeCosts;
@@ -48,6 +48,7 @@ public class Kit
 		
 		upgradableItems = new HashMap<String, ArrayList<ItemStack>>();
 		itemUpgradeCosts = new HashMap<String, ArrayList<Integer>>();
+		orderedItems = new ArrayList<String>();
 		
 		potionEffects = new ArrayList<ArrayList<PotionEffect>>();
 		potionUpgradeCosts = new ArrayList<Integer>();
@@ -89,7 +90,10 @@ public class Kit
 		{
 			//Test for defined pieces
 			if (upgradableItems.get(pieceName) == null)
+			{
 				upgradableItems.put(pieceName, new ArrayList<ItemStack>());
+				orderedItems.add(pieceName);
+			}
 			if (itemUpgradeCosts.get(pieceName) == null)
 				itemUpgradeCosts.put(pieceName, new ArrayList<Integer>());
 			
@@ -119,9 +123,9 @@ public class Kit
 		return 0;
 	}
 	
-	public Set<String> getItemNames()
+	public ArrayList<String> getItemNames()
 	{
-		return upgradableItems.keySet();
+		return orderedItems;
 	}
 	
 	public void addPotionEffectSet(ArrayList<PotionEffect> potionEffects, int cost)
