@@ -46,6 +46,17 @@ public class KitCommandExecutor implements CommandExecutor
 			//If args are supplied
 			else
 			{
+				if (args[0].equalsIgnoreCase("confirm"))
+				{
+					if (args.length == 1)
+					{
+						if (!kitManager.getKitPurchaseConfirmer().finishPurchase(player.getName()))
+							player.sendMessage(ChatColor.RED + "You don't have an open purchase to confirm.");
+					}
+					else
+						player.sendMessage(ChatColor.RED + "/kit confirm");
+				}
+				
 				//If the player is trying to buy a new kit
 				if (args[0].equalsIgnoreCase("buy"))
 				{
@@ -66,11 +77,7 @@ public class KitCommandExecutor implements CommandExecutor
 								//If the player can afford the kit
 								if (CurrencyOperations.getCurrency(player) >= cost)
 								{
-									//Give them the kit
-									CurrencyOperations.setCurrency(player, CurrencyOperations.getCurrency(player) - cost);
-									kitPlayer.unlockKit(args[1]);
-									
-									player.sendMessage(ChatColor.GREEN + "You have successfully purchased the kit '" + args[1] + "'.");
+									kitManager.getKitPurchaseConfirmer().openPurchase(new KitPurchase(kitPlayer, args[1], cost));
 								}
 								else
 									player.sendMessage(ChatColor.RED + args[1] + " costs " + cost + " Honor.");

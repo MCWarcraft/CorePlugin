@@ -29,6 +29,8 @@ public class KitManager
 	
 	private CorePlugin plugin;
 	
+	private KitPurchaseConfirmer kitPurchaseConfirmer;
+	
 	private DatabaseConnection databaseConnection;
 	
 	//Build map of reverse keys
@@ -47,7 +49,10 @@ public class KitManager
 		
 		this.plugin = plugin;
 		
+		kitPurchaseConfirmer = new KitPurchaseConfirmer();
+		
 		plugin.getServer().getPluginManager().registerEvents(new KitListener(this), plugin);
+		plugin.getServer().getPluginManager().registerEvents(kitPurchaseConfirmer, plugin);
 		
 		databaseConnection = new DatabaseConnection(plugin.getConfig().getString("sql.ip"), plugin.getConfig().getString("sql.port"), plugin.getConfig().getString("sql.database"), plugin.getConfig().getString("sql.username"), plugin.getConfig().getString("sql.password"));
 		
@@ -281,7 +286,9 @@ public class KitManager
 		this.putKitPlayer(kitPlayer);
 		
 		for (String kitName : kits.keySet())
-		{
+		{{
+			
+		}
 			DatabaseQueryAction queryAction = databaseConnection.getDatabaseQueryAction("kit_" + kitName);
 			queryAction.addConstraint("player", playerName);
 			
@@ -334,6 +341,11 @@ public class KitManager
 			
 			updateAction.executeUpdate();
 		}
+	}
+	
+	public KitPurchaseConfirmer getKitPurchaseConfirmer()
+	{
+		return kitPurchaseConfirmer;
 	}
 	
 	public String getDefaultKitName()
