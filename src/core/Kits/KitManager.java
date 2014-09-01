@@ -22,6 +22,8 @@ import core.CavemanSQL.DatabaseUpdateAction;
 
 public class KitManager
 {
+	private String defaultKitName;
+	
 	private HashMap<String, Kit> kits;
 	private HashMap<String, KitPlayer> kitPlayers;
 	
@@ -34,6 +36,8 @@ public class KitManager
 	
 	public KitManager(CorePlugin plugin)
 	{
+		defaultKitName = plugin.getConfig().getString("defaultkit");
+		
 		kitPieceMap = new HashMap<String, KitPiece>();
 		for (KitPiece piece : KitPiece.values())
 			kitPieceMap.put(piece.toString(), piece);
@@ -107,11 +111,13 @@ public class KitManager
 	
 		ConfigurationSection kitsSection = plugin.getConfig().getConfigurationSection("kits");
 		//Alert if no default kit is found
-		if (!kitsSection.getKeys(false).contains("default")) plugin.getServer().getLogger().info("No default kit found. Expect erratic behavior.");
+		if (!kitsSection.getKeys(false).contains(defaultKitName)) plugin.getServer().getLogger().info("No default kit found. Expect erratic behavior.");
 		
 		//Loop over all kits in config
 		for (String kitName : kitsSection.getKeys(false))
 		{
+			System.out.println("Kit: " + kitName);
+			
 			ConfigurationSection kitSection = kitsSection.getConfigurationSection(kitName);
 			ConfigurationSection upgradableSection = kitSection.getConfigurationSection("upgradable");
 			
@@ -120,6 +126,8 @@ public class KitManager
 			//Loop over each piece of the kit
 			for (String pieceName : upgradableSection.getKeys(false))
 			{
+				System.out.println("Piece: " + pieceName);
+				
 				if (pieceName.equalsIgnoreCase("potions"))
 					continue;
 					
@@ -128,6 +136,8 @@ public class KitManager
 				//Loop over each level of the piece
 				for (String levelNumber : pieceSection.getKeys(false))
 				{
+					System.out.println("Level: " + levelNumber);
+					
 					ConfigurationSection levelSection = pieceSection.getConfigurationSection(levelNumber);
 					
 					int cost = 0;
@@ -144,6 +154,8 @@ public class KitManager
 							itemName = item;
 						
 						ConfigurationSection itemSection = levelSection.getConfigurationSection(itemName);
+						
+						System.out.println("Item Name:" + itemName);
 						
 						tempStack = new ItemStack(Material.getMaterial(itemName));
 						
@@ -237,7 +249,7 @@ public class KitManager
 				//Configure main player data table
 				String openKitTableString = "CREATE TABLE IF NOT EXISTS kit_" + kitName +
 						"( player varchar(17) not null," +
-						"unlocked boolean DEFAULT " + (kitName.equalsIgnoreCase("default") ? "1" : "0") + "," +
+						"unlocked boolean DEFAULT " + (kitName.equalsIgnoreCase(defaultKitName) ? "1" : "0") + "," +
 						"potions int DEFAULT 1," +
 						//
 						"helmet int DEFAULT 1," +
@@ -322,5 +334,10 @@ public class KitManager
 			
 			updateAction.executeUpdate();
 		}
+	}
+	
+	public String getDefaultKitName()
+	{
+		return defaultKitName;
 	}
 }

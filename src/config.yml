@@ -16,6 +16,9 @@ savetime: 300
 engagementtime: 5
 
 ##Kit config##
+
+defaultkit: 'default'
+
 kits:  
   default:
     cost: 0

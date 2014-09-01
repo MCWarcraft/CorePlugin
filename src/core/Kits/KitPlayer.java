@@ -22,7 +22,7 @@ public class KitPlayer
 		potionLevelMap = new HashMap<String, Integer>();
 		kitUnlockMap = new HashMap<String, Boolean>();
 		 
-		selectedKit = "default";
+		selectedKit = kitManager.getDefaultKitName();
 		this.kitManager = kitManager;
 		unlockKit(selectedKit);
 	}
