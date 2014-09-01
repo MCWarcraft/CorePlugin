@@ -2,16 +2,26 @@ package core.Utilities;
 
 import java.util.ArrayList;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import core.CorePlugin;
 import core.Custody.CustodySwitchEvent;
 
 public class DropBlocker implements Listener
 {
 	private static ArrayList<String> dropAllowed = new ArrayList<String>();
+	
+	private CorePlugin plugin;
+	
+	public DropBlocker(CorePlugin plugin)
+	{
+		this.plugin = plugin;
+	}
 	
 	public static void setDropAllowed(String playerName)
 	{
@@ -19,10 +29,13 @@ public class DropBlocker implements Listener
 	}
 	
 	//Based on inventory lock
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onItemDrop(PlayerDropItemEvent event)
 	{
-		if (event.getPlayer().hasPermission("core.override.drop"))
+		final Player player = event.getPlayer();
+		
+		if (player.hasPermission("core.override.drop"))
 		{
 			event.setCancelled(false);
 			return;
@@ -31,12 +44,20 @@ public class DropBlocker implements Listener
 				event.getItemDrop().getItemStack().getItemMeta().equals(CoreItems.WATCH.getItemMeta()) || 
 				event.getItemDrop().getItemStack().getItemMeta().equals(CoreItems.NETHER_STAR.getItemMeta()))
 			event.setCancelled(true);
-		else if (!dropAllowed.contains(event.getPlayer().getName()))
+		else if (!dropAllowed.contains(player.getName()))
 			event.setCancelled(true);
+		
+		new BukkitRunnable()
+		{
+			public void run()
+			{
+				player.updateInventory();
+			}
+		}.runTaskLater(plugin, 10);
 	}
 
 	//Based on inventory lock
-	@EventHandler
+	//@EventHandler
 	public void onInventoryClick(InventoryClickEvent event)
 	{
 		if (event.getCurrentItem() == null)

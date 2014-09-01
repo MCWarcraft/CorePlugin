@@ -62,7 +62,7 @@ public class CorePlugin extends JavaPlugin implements Listener
 		getServer().getPluginManager().registerEvents(new LocationSelector(), this);
 		getServer().getPluginManager().registerEvents(new PlayerZeroHealthListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerVoidDamageListener(), this);
-		getServer().getPluginManager().registerEvents(new DropBlocker(), this);
+		getServer().getPluginManager().registerEvents(new DropBlocker(this), this);
 		getServer().getPluginManager().registerEvents(new BlockPlaceStopper(), this);
 		getServer().getPluginManager().registerEvents(new HungerStopper(), this);
 		getServer().getPluginManager().registerEvents(honorPoints, this);

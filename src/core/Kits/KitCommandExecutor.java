@@ -297,7 +297,7 @@ public class KitCommandExecutor implements CommandExecutor
 					}
 					//If the wrong number of args is supplied
 					else
-						player.sendMessage(ChatColor.RED + "/kit buy <kitname>");
+						player.sendMessage(ChatColor.RED + "/kit select <kitname>");
 				}
 			}
 			
