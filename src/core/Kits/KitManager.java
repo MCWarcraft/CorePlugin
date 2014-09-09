@@ -51,9 +51,6 @@ public class KitManager
 		
 		kitPurchaseConfirmer = new KitPurchaseConfirmer();
 		
-		plugin.getServer().getPluginManager().registerEvents(new KitListener(this), plugin);
-		plugin.getServer().getPluginManager().registerEvents(kitPurchaseConfirmer, plugin);
-		
 		databaseConnection = new DatabaseConnection(plugin.getConfig().getString("sql.ip"), plugin.getConfig().getString("sql.port"), plugin.getConfig().getString("sql.database"), plugin.getConfig().getString("sql.username"), plugin.getConfig().getString("sql.password"));
 		
 		loadKits();
@@ -62,6 +59,9 @@ public class KitManager
 		
 		KitScoreboardConnector.initialize(this);
 		EquippableKitConnector.initialize(this);
+		
+		plugin.getServer().getPluginManager().registerEvents(new KitListener(this), plugin);
+		plugin.getServer().getPluginManager().registerEvents(kitPurchaseConfirmer, plugin);
 	}
 	
 	public void shutdown()

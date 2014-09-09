@@ -15,7 +15,7 @@ public class KitPlayer
 	private KitManager kitManager;
 
 	public KitPlayer(String playerName, KitManager kitManager)
-	{
+	{		
 		this.playerName = playerName;
 		pieceLevelMap = new HashMap<String, HashMap<KitPiece, Integer>>();
 		itemLevelMap = new HashMap<String, HashMap<String, Integer>>();
@@ -23,6 +23,7 @@ public class KitPlayer
 		kitUnlockMap = new HashMap<String, Boolean>();
 		 
 		selectedKit = kitManager.getDefaultKitName();
+		System.out.println("Loading with kit " + selectedKit);
 		this.kitManager = kitManager;
 		unlockKit(selectedKit);
 	}

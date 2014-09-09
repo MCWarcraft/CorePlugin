@@ -40,7 +40,7 @@ public class KitCommandExecutor implements CommandExecutor
 				{
 				//Equip kit
 				kitManager.getEquippableKit(player).equip();
-				player.sendMessage(ChatColor.GREEN + "You have equipped the kit '" + kitManager.getKitPlayer(player.getName()).getSelectedKit() + "'");
+				player.sendMessage(ChatColor.GOLD + "You have equipped the " + ChatColor.GREEN + kitManager.getKitPlayer(player.getName()).getSelectedKit() + ChatColor.GOLD + " kit");
 				}
 			}
 			//If args are supplied
@@ -290,7 +290,7 @@ public class KitCommandExecutor implements CommandExecutor
 							if (kitPlayer.isKitUnlocked(args[1]))
 							{
 								kitPlayer.setSelectedKit(args[1]);
-								player.sendMessage("" + ChatColor.BOLD + ChatColor.ITALIC + ChatColor.GOLD + "You have selected the " + ChatColor.GREEN + args[1] + ChatColor.GOLD + " kit!");
+								player.sendMessage("" + ChatColor.BOLD + ChatColor.ITALIC + ChatColor.GOLD + "You have selected the " + ChatColor.GREEN + args[1] + ChatColor.GOLD + " kit");
 
 								CoreScoreboardManager.getDisplayBoard(player.getName()).update(false);
 							}
