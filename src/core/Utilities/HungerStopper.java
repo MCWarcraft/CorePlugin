@@ -1,6 +1,7 @@
 package core.Utilities;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,23 +11,23 @@ import core.Custody.CustodySwitchEvent;
 
 public class HungerStopper implements Listener
 {
-	private static ArrayList<String> canGetHungry = new ArrayList<String>();
+	private static ArrayList<UUID> canGetHungry = new ArrayList<UUID>();
 	
-	public static void setCanGetHungry(String playerName)
+	public static void setCanGetHungry(UUID playerUUID)
 	{
-		canGetHungry.add(playerName);
+		canGetHungry.add(playerUUID);
 	}
 
 	@EventHandler
 	public void onCustodySwitch(CustodySwitchEvent event)
 	{
-		canGetHungry.remove(event.getPlayer().getName());
+		canGetHungry.remove(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
 	public void onFoodChange(FoodLevelChangeEvent event)
 	{
-		if (!canGetHungry.contains(event.getEntity().getName()))
+		if (!canGetHungry.contains(event.getEntity().getUniqueId()))
 			event.setFoodLevel(20);
 	}
 }

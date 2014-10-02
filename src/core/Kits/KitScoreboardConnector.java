@@ -1,5 +1,7 @@
 package core.Kits;
 
+import java.util.UUID;
+
 import core.Scoreboard.ScoreboardValue;
 
 public class KitScoreboardConnector implements ScoreboardValue
@@ -14,6 +16,6 @@ public class KitScoreboardConnector implements ScoreboardValue
 	@Override
 	public String getScoreboardValue(String key)
 	{
-		return manager.getKitPlayer(key).getSelectedKit().toUpperCase();
+		return manager.getKitPlayer(UUID.fromString(key)).getSelectedKit().toUpperCase();
 	}
 }

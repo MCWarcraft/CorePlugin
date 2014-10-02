@@ -28,7 +28,7 @@ public class GameBoard
 	
 	public void setScore(OfflinePlayer player, int score)
 	{
-		o.getScore(player).setScore(score);
+		o.getScore(player.getName()).setScore(score);
 	}
 	
 	public void assign(Player player)

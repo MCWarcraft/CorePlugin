@@ -34,13 +34,13 @@ public class KitCommandExecutor implements CommandExecutor
 			//If no args are supplied
 			if (args.length == 0)
 			{
-				if (!KitLockManager.canEquip(player.getName()))
+				if (!KitLockManager.canEquip(player.getUniqueId()))
 					player.sendMessage(ChatColor.RED + "You can't equip a kit right now.");
 				else
 				{
 				//Equip kit
 				kitManager.getEquippableKit(player).equip();
-				player.sendMessage(ChatColor.GOLD + "You have equipped the " + ChatColor.GREEN + kitManager.getKitPlayer(player.getName()).getSelectedKit() + ChatColor.GOLD + " kit");
+				player.sendMessage(ChatColor.GOLD + "You have equipped the " + ChatColor.GREEN + kitManager.getKitPlayer(player.getUniqueId()).getSelectedKit() + ChatColor.GOLD + " kit");
 				}
 			}
 			//If args are supplied
@@ -50,7 +50,7 @@ public class KitCommandExecutor implements CommandExecutor
 				{
 					if (args.length == 1)
 					{
-						if (!kitManager.getKitPurchaseConfirmer().finishPurchase(player.getName()))
+						if (!kitManager.getKitPurchaseConfirmer().finishPurchase(player.getUniqueId()))
 							player.sendMessage(ChatColor.RED + "You don't have an open purchase to confirm.");
 					}
 					else
@@ -69,7 +69,7 @@ public class KitCommandExecutor implements CommandExecutor
 						if (kit != null)
 						{
 							int cost = kit.getCost();
-							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getName());
+							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getUniqueId());
 							
 							//If the player doesn't already own the kit
 							if (!kitPlayer.isKitUnlocked(args[1]))
@@ -106,7 +106,7 @@ public class KitCommandExecutor implements CommandExecutor
 						if (kit != null)
 						{
 							player.sendMessage(ChatColor.GREEN + args[1] + " costs " + kit.getCost() + " honor.");
-							player.sendMessage(kitManager.getKitPlayer(player.getName()).isKitUnlocked(args[1]) ? ChatColor.GREEN + "However, you already own it!" : ((kit.getCost() > CurrencyOperations.getCurrency(player)) ? ChatColor.DARK_RED + "You can't afford it." : ChatColor.GREEN + "You can afford it!"));
+							player.sendMessage(kitManager.getKitPlayer(player.getUniqueId()).isKitUnlocked(args[1]) ? ChatColor.GREEN + "However, you already own it!" : ((kit.getCost() > CurrencyOperations.getCurrency(player)) ? ChatColor.DARK_RED + "You can't afford it." : ChatColor.GREEN + "You can afford it!"));
 						}
 						//If the kit doesn't exist
 						else
@@ -128,7 +128,7 @@ public class KitCommandExecutor implements CommandExecutor
 						//If the kit being attempted exists
 						if (kit != null)
 						{
-							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getName());
+							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getUniqueId());
 							
 							KitPiece piece = kitManager.kitPieceMap.get(args[2].toLowerCase());
 							
@@ -228,7 +228,7 @@ public class KitCommandExecutor implements CommandExecutor
 						//If the kit being attempted exists
 						if (kit != null)
 						{
-							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getName());
+							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getUniqueId());
 							
 							KitPiece piece = kitManager.kitPieceMap.get(args[2].toLowerCase());
 							
@@ -284,7 +284,7 @@ public class KitCommandExecutor implements CommandExecutor
 						//If the kit being attempted exists
 						if (kit != null)
 						{
-							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getName());
+							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getUniqueId());
 							
 							//If the player owns the kit in question
 							if (kitPlayer.isKitUnlocked(args[1]))
@@ -292,7 +292,7 @@ public class KitCommandExecutor implements CommandExecutor
 								kitPlayer.setSelectedKit(args[1]);
 								player.sendMessage("" + ChatColor.BOLD + ChatColor.ITALIC + ChatColor.GOLD + "You have selected the " + ChatColor.GREEN + args[1] + ChatColor.GOLD + " kit");
 
-								CoreScoreboardManager.getDisplayBoard(player.getName()).update(false);
+								CoreScoreboardManager.getDisplayBoard(player.getUniqueId()).update(false);
 							}
 							//If the player doesn't own the kit in question
 							else

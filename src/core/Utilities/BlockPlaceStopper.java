@@ -1,6 +1,7 @@
 package core.Utilities;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,17 +11,17 @@ import core.Custody.CustodySwitchEvent;
 
 public class BlockPlaceStopper implements Listener
 {
-	private static ArrayList<String> canPlace = new ArrayList<String>();
+	private static ArrayList<UUID> canPlace = new ArrayList<UUID>();
 	
-	public static void setCanGetHungry(String playerName)
+	public static void setCanPlace(UUID playerUUID)
 	{
-		canPlace.add(playerName);
+		canPlace.add(playerUUID);
 	}
 
 	@EventHandler
 	public void onCustodySwitch(CustodySwitchEvent event)
 	{
-		canPlace.remove(event.getPlayer().getName());
+		canPlace.remove(event.getPlayer().getUniqueId());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -33,7 +34,7 @@ public class BlockPlaceStopper implements Listener
 			event.getPlayer().updateInventory();
 			return;
 		}
-		else if (!canPlace.contains(event.getPlayer().getName()))
+		else if (!canPlace.contains(event.getPlayer().getUniqueId()))
 		{
 			event.setCancelled(true);
 			event.getPlayer().updateInventory();

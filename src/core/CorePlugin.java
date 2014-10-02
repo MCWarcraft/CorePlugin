@@ -32,6 +32,7 @@ import core.Utilities.CoreItems;
 import core.Utilities.DropBlocker;
 import core.Utilities.HungerStopper;
 import core.Utilities.LocationSelector;
+import core.Utilities.UUIDCache;
 
 public class CorePlugin extends JavaPlugin implements Listener
 {
@@ -67,6 +68,7 @@ public class CorePlugin extends JavaPlugin implements Listener
 		getServer().getPluginManager().registerEvents(new HungerStopper(), this);
 		getServer().getPluginManager().registerEvents(honorPoints, this);
 		getServer().getPluginManager().registerEvents(new PlayerEngageListener(this, getConfig().getInt("engagementtime")), this);
+		getServer().getPluginManager().registerEvents(new UUIDCache(), this);
 		
 		//Set command executors
 		this.getCommand("who").setExecutor(new CoreCommandExecutor(this));

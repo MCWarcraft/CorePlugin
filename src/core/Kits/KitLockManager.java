@@ -2,34 +2,35 @@ package core.Kits;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class KitLockManager
 {
-	private static HashMap<String, Boolean> canEquip = new HashMap<String, Boolean>();
-	private static ArrayList<String> singleEquipees = new ArrayList<String>();
+	private static HashMap<UUID, Boolean> canEquip = new HashMap<UUID, Boolean>();
+	private static ArrayList<UUID> singleEquipees = new ArrayList<UUID>();
 	
-	public static boolean canEquip(String playerName)
+	public static boolean canEquip(UUID playerUUID)
 	{
-		if (canEquip.get(playerName) == null || canEquip.get(playerName) == false) return false;
+		if (canEquip.get(playerUUID) == null || canEquip.get(playerUUID) == false) return false;
 		
-		if (singleEquipees.contains(playerName))
+		if (singleEquipees.contains(playerUUID))
 		{
-			singleEquipees.remove(playerName);
-			canEquip.put(playerName, false);
+			singleEquipees.remove(playerUUID);
+			canEquip.put(playerUUID, false);
 		}
 		return true;
 	}
 	
-	public static void setCanEquip(boolean infinite, String playerName)
+	public static void setCanEquip(boolean infinite, UUID playerUUID)
 	{
-		KitLockManager.canEquip.put(playerName, true);
+		KitLockManager.canEquip.put(playerUUID, true);
 		if (!infinite)
-			singleEquipees.add(playerName);
+			singleEquipees.add(playerUUID);
 	}
 	
-	public static void setCanNotEquip(String playerName)
+	public static void setCanNotEquip(UUID playerUUID)
 	{
-		KitLockManager.canEquip.put(playerName, false);
-		singleEquipees.remove(playerName);
+		KitLockManager.canEquip.put(playerUUID, false);
+		singleEquipees.remove(playerUUID);
 	}
 }

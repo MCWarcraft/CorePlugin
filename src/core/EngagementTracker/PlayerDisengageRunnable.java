@@ -1,19 +1,21 @@
 package core.EngagementTracker;
 
+import java.util.UUID;
+
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerDisengageRunnable extends BukkitRunnable
 {
-	private String playerName;
+	private UUID playerUUID;
 	
-	public PlayerDisengageRunnable(String playerName)
+	public PlayerDisengageRunnable(UUID playerUUID)
 	{
-		this.playerName = playerName;
+		this.playerUUID = playerUUID;
 	}
 	
 	@Override
 	public void run()
 	{
-		PlayerEngageListener.disengagePlayer(playerName);
+		PlayerEngageListener.disengagePlayer(playerUUID);
 	}
 }

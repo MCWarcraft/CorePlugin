@@ -16,6 +16,9 @@ public class EquippableKit
 	{
 		this.player = player;
 		this.kitPlayer = kitPlayer;
+		
+		System.out.println("kitPlayer UUID - " + kitPlayer.getPlayerUUID());
+		
 		this.kit = kit;
 	}
 	

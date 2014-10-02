@@ -1,6 +1,7 @@
 package core.Utilities;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +15,7 @@ import core.Custody.CustodySwitchEvent;
 
 public class DropBlocker implements Listener
 {
-	private static ArrayList<String> dropAllowed = new ArrayList<String>();
+	private static ArrayList<UUID> dropAllowed = new ArrayList<UUID>();
 	
 	private CorePlugin plugin;
 	
@@ -23,9 +24,9 @@ public class DropBlocker implements Listener
 		this.plugin = plugin;
 	}
 	
-	public static void setDropAllowed(String playerName)
+	public static void setDropAllowed(UUID playerUUID)
 	{
-		dropAllowed.add(playerName);
+		dropAllowed.add(playerUUID);
 	}
 	
 	//Based on inventory lock
@@ -44,7 +45,7 @@ public class DropBlocker implements Listener
 				event.getItemDrop().getItemStack().getItemMeta().equals(CoreItems.WATCH.getItemMeta()) || 
 				event.getItemDrop().getItemStack().getItemMeta().equals(CoreItems.NETHER_STAR.getItemMeta()))
 			event.setCancelled(true);
-		else if (!dropAllowed.contains(player.getName()))
+		else if (!dropAllowed.contains(player.getUniqueId()))
 			event.setCancelled(true);
 		
 		new BukkitRunnable()
@@ -68,13 +69,13 @@ public class DropBlocker implements Listener
 			event.setCancelled(false);
 			return;
 		}
-		else if (!dropAllowed.contains(event.getWhoClicked().getName()))
+		else if (!dropAllowed.contains(event.getWhoClicked().getUniqueId()))
 			event.setCancelled(true);
 	}
 	
 	@EventHandler
 	public void onCustodySwitch(CustodySwitchEvent event)
 	{
-		dropAllowed.remove(event.getPlayer().getName());
+		dropAllowed.remove(event.getPlayer().getUniqueId());
 	}
 }

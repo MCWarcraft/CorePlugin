@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import core.CorePlugin;
+import core.Utilities.UUIDCache;
 
 public class CurrencyOperations
 {
@@ -24,8 +25,8 @@ public class CurrencyOperations
 		{
 			if (!isPlayerInTable(p))
 			{
-				PreparedStatement addPlayerStatement = plugin.getConnection().prepareStatement("INSERT INTO player_currency_data SET player = ?");
-				addPlayerStatement.setString(1, p.getName());
+				PreparedStatement addPlayerStatement = plugin.getConnection().prepareStatement("INSERT INTO player_currency_data SET uuid = ?");
+				addPlayerStatement.setString(1, p.getUniqueId().toString());
 				addPlayerStatement.execute();
 				addPlayerStatement.close();
 			}
@@ -40,7 +41,7 @@ public class CurrencyOperations
 	{
 		try
 		{
-			PreparedStatement statement = plugin.getConnection().prepareStatement("SELECT * FROM player_currency_data WHERE player = '" + player.getName() +"'");
+			PreparedStatement statement = plugin.getConnection().prepareStatement("SELECT * FROM player_currency_data WHERE uuid = '" + player.getUniqueId() +"'");
 			ResultSet result = statement.executeQuery();
 			boolean isInRow = result.next();
 			
@@ -60,8 +61,8 @@ public class CurrencyOperations
 	{
 		try
 		{
-			PreparedStatement getPlayerDataStatement = plugin.getConnection().prepareStatement("SELECT currency FROM player_currency_data WHERE player = ?");
-			getPlayerDataStatement.setString(1, player.getName());
+			PreparedStatement getPlayerDataStatement = plugin.getConnection().prepareStatement("SELECT currency FROM player_currency_data WHERE uuid = ?");
+			getPlayerDataStatement.setString(1, player.getUniqueId().toString());
 			
 			ResultSet result = getPlayerDataStatement.executeQuery();
 			
@@ -80,15 +81,15 @@ public class CurrencyOperations
 	{
 		try
 		{
-			PreparedStatement setPlayerDataStatement = plugin.getConnection().prepareStatement("UPDATE player_currency_data SET currency = ? WHERE player = ?");
+			PreparedStatement setPlayerDataStatement = plugin.getConnection().prepareStatement("UPDATE player_currency_data SET currency = ? WHERE uuid = ?");
 			setPlayerDataStatement.setInt(1, currency);
-			setPlayerDataStatement.setString(2, player.getName());
+			setPlayerDataStatement.setString(2, player.getUniqueId().toString());
 
 			setPlayerDataStatement.executeUpdate();
 			setPlayerDataStatement.close();
 			
-			if (Bukkit.getServer().getPlayer(player.getName()) != null)
-				Bukkit.getServer().getPluginManager().callEvent(new OnlinePlayerCurrencyUpdateEvent(Bukkit.getServer().getPlayer(player.getName())));
+			if (UUIDCache.getPlayerUUID(player.getName()) != null)
+				Bukkit.getServer().getPluginManager().callEvent(new OnlinePlayerCurrencyUpdateEvent(Bukkit.getServer().getPlayer(UUIDCache.getPlayerUUID(player.getName()))));
 		}
 		catch (SQLException e)
 		{
@@ -100,15 +101,12 @@ public class CurrencyOperations
 	{
 		try
 		{
-			PreparedStatement setPlayerDataStatement = plugin.getConnection().prepareStatement("UPDATE player_currency_data SET multiplier = ? WHERE player = ?");
+			PreparedStatement setPlayerDataStatement = plugin.getConnection().prepareStatement("UPDATE player_currency_data SET multiplier = ? WHERE uuid = ?");
 			setPlayerDataStatement.setDouble(1, multiplier);
-			setPlayerDataStatement.setString(2, player.getName());
+			setPlayerDataStatement.setString(2, player.getUniqueId().toString());
 
 			setPlayerDataStatement.executeUpdate();
 			setPlayerDataStatement.close();
-			
-			//TODO: WTF is this line?
-			//randy.spawnutility.main.SetRank(player.getName(), Integer.parseInt(Double.toString(multiplier).split(".")[0]));
 		}
 		catch (SQLException e)
 		{
@@ -120,8 +118,8 @@ public class CurrencyOperations
 	{
 		try
 		{
-			PreparedStatement getPlayerDataStatement = plugin.getConnection().prepareStatement("SELECT multiplier FROM player_currency_data WHERE player = ?");
-			getPlayerDataStatement.setString(1, player.getName());
+			PreparedStatement getPlayerDataStatement = plugin.getConnection().prepareStatement("SELECT multiplier FROM player_currency_data WHERE uuid = ?");
+			getPlayerDataStatement.setString(1, player.getUniqueId().toString());
 			
 			ResultSet result = getPlayerDataStatement.executeQuery();
 			

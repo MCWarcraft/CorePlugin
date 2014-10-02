@@ -1,10 +1,11 @@
 package core.Kits;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class KitPlayer
 {
-	private String playerName;
+	private UUID playerUUID;
 	
 	private HashMap<String, HashMap<KitPiece, Integer>> pieceLevelMap;
 	private HashMap<String, HashMap<String, Integer>> itemLevelMap;
@@ -14,9 +15,9 @@ public class KitPlayer
 	private String selectedKit;
 	private KitManager kitManager;
 
-	public KitPlayer(String playerName, KitManager kitManager)
+	public KitPlayer(UUID playerUUID, KitManager kitManager)
 	{		
-		this.playerName = playerName;
+		this.playerUUID = playerUUID;
 		pieceLevelMap = new HashMap<String, HashMap<KitPiece, Integer>>();
 		itemLevelMap = new HashMap<String, HashMap<String, Integer>>();
 		potionLevelMap = new HashMap<String, Integer>();
@@ -149,6 +150,16 @@ public class KitPlayer
 	
 	public int getItemLevel(String kitName, String itemName)
 	{
+		System.out.println("Enumeration of kits in level map:\n---------------------------");
+		for (String kitNameT : itemLevelMap.keySet())
+			System.out.println("    " + kitNameT);
+		System.out.println("----------------------");
+		
+		System.out.println("Kitname - " + kitName);
+		System.out.println("itemLevelMap null: " + (itemLevelMap == null));
+		System.out.println("kitName: " + (kitName == null));
+		System.out.println("itemLevelMap.get(kitName) null: " + (itemLevelMap.get(kitName) == null));
+		
 		return itemLevelMap.get(kitName).get(itemName);
 	}
 	
@@ -162,9 +173,9 @@ public class KitPlayer
 		return selectedKit;
 	}
 	
-	public String getPlayerName()
+	public UUID getPlayerUUID()
 	{
-		return playerName;
+		return playerUUID;
 	}
 	
 	public boolean isKitUnlocked(String name)

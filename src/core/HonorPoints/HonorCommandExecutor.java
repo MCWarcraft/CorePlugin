@@ -1,11 +1,15 @@
 package core.HonorPoints;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import core.Utilities.UUIDCache;
 
 public class HonorCommandExecutor implements CommandExecutor
 {	
@@ -22,8 +26,10 @@ public class HonorCommandExecutor implements CommandExecutor
 				{
 					if (args.length == 3)
 					{
+						UUID playerUUID = UUIDCache.getPlayerUUID(args[1]);
+						
 						//If the player being manipulated is in the database
-						if (CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(args[1])))
+						if (playerUUID != null && CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(playerUUID)))
 						{
 							int amount = -1;
 							//Try to format the value
@@ -40,8 +46,8 @@ public class HonorCommandExecutor implements CommandExecutor
 							//If the number is positive or 0
 							if (amount >= 0)
 							{
-								CurrencyOperations.setCurrency(Bukkit.getOfflinePlayer(args[1]), amount);
-								sender.sendMessage(ChatColor.BLUE + "" + args[1] + "" + ChatColor.GREEN + " now has " + ChatColor.BLUE + CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(args[1])) + ChatColor.GREEN + " honor");
+								CurrencyOperations.setCurrency(Bukkit.getOfflinePlayer(playerUUID), amount);
+								sender.sendMessage(ChatColor.BLUE + "" + args[1] + "" + ChatColor.GREEN + " now has " + ChatColor.BLUE + CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(playerUUID)) + ChatColor.GREEN + " honor");
 							}
 							//If the number is negative
 							else
@@ -60,8 +66,10 @@ public class HonorCommandExecutor implements CommandExecutor
 				{
 					if (args.length == 3)
 					{
+						UUID playerUUID = UUIDCache.getPlayerUUID(args[1]);
+						
 						//If the player being manipulated is in the database
-						if (CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(args[1])))
+						if (playerUUID != null && CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(playerUUID)))
 						{
 							int amount = -1;
 							//Try to format the value
@@ -78,8 +86,8 @@ public class HonorCommandExecutor implements CommandExecutor
 							//If the number is positive or 0
 							if (amount >= 0)
 							{
-								CurrencyOperations.setCurrency(Bukkit.getOfflinePlayer(args[1]), CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(args[1])) + amount);
-								sender.sendMessage(ChatColor.BLUE + "" + args[1] + "" + ChatColor.GREEN + " now has " + ChatColor.BLUE + CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(args[1])) + ChatColor.GREEN + " honor after addition");
+								CurrencyOperations.setCurrency(Bukkit.getOfflinePlayer(playerUUID), CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(playerUUID)) + amount);
+								sender.sendMessage(ChatColor.BLUE + "" + args[1] + "" + ChatColor.GREEN + " now has " + ChatColor.BLUE + CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(playerUUID)) + ChatColor.GREEN + " honor after addition");
 							}
 							//If the number is negative
 							else
@@ -100,8 +108,10 @@ public class HonorCommandExecutor implements CommandExecutor
 				{
 					if (args.length == 3)
 					{
+						UUID playerUUID = UUIDCache.getPlayerUUID(args[1]);
+						
 						//If the player being manipulated is in the database
-						if (CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(args[1])))
+						if (playerUUID != null && CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(playerUUID)))
 						{
 							int amount = -1;
 							//Try to format the value
@@ -119,10 +129,10 @@ public class HonorCommandExecutor implements CommandExecutor
 							if (amount >= 0)
 							{
 								//If the player can afford the deduction
-								if (CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(args[1])) - amount >= 0)
+								if (CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(playerUUID)) - amount >= 0)
 								{
-									CurrencyOperations.setCurrency(Bukkit.getOfflinePlayer(args[1]), CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(args[1])) - amount);
-									sender.sendMessage(ChatColor.BLUE + "" + args[1] + "" + ChatColor.GREEN + " now has " + ChatColor.BLUE + CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(args[1])) + ChatColor.GREEN + " honor after deduction");
+									CurrencyOperations.setCurrency(Bukkit.getOfflinePlayer(playerUUID), CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(playerUUID)) - amount);
+									sender.sendMessage(ChatColor.BLUE + "" + args[1] + "" + ChatColor.GREEN + " now has " + ChatColor.BLUE + CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(playerUUID)) + ChatColor.GREEN + " honor after deduction");
 								}
 								//If the player can't afford the deduction
 								else
@@ -145,9 +155,11 @@ public class HonorCommandExecutor implements CommandExecutor
 				{
 					if (args.length == 2)
 					{
+						UUID playerUUID = UUIDCache.getPlayerUUID(args[1]);
+						
 						//If the player being manipulated is in the database
-						if (CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(args[1])))
-							sender.sendMessage(ChatColor.BLUE + "" + args[1] + "" + ChatColor.GREEN + " has " + ChatColor.BLUE + CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(args[1])) + ChatColor.GREEN + " honor");
+						if (playerUUID != null && CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(playerUUID)))
+							sender.sendMessage(ChatColor.BLUE + "" + args[1] + "" + ChatColor.GREEN + " has " + ChatColor.BLUE + CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(playerUUID)) + ChatColor.GREEN + " honor");
 						//If there is no record of the player being requested
 						else
 							sender.sendMessage(ChatColor.RED + "There is no record of a player named " + args[1]);
@@ -162,15 +174,17 @@ public class HonorCommandExecutor implements CommandExecutor
 						//If there are enough args
 						if (args.length == 3)
 						{
+							UUID playerUUID = UUIDCache.getPlayerUUID(args[1]);
+							
 							//If the player being manipulated is in the database
-							if (CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(args[1])))
+							if (playerUUID != null && CurrencyOperations.isPlayerInTable(Bukkit.getOfflinePlayer(playerUUID)))
 							{
 								double multiplier = -1;
 								try {multiplier = Double.parseDouble(args[2]);} catch (NumberFormatException e){sender.sendMessage(ChatColor.RED + "The multiplier must be a valid double."); return true;}
 								//If the multiplier is bigger than 0
 								if (multiplier > 0)
 								{
-									CurrencyOperations.setMultiplier(Bukkit.getOfflinePlayer(args[1]), multiplier);
+									CurrencyOperations.setMultiplier(Bukkit.getOfflinePlayer(playerUUID), multiplier);
 									sender.sendMessage(args[1] + ChatColor.GREEN + "'s multiplier is now set to " + ChatColor.WHITE + args[2] + ".");
 								}
 								//If the multiplier is negative

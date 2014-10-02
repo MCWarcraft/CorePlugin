@@ -19,18 +19,18 @@ public class KitListener implements Listener
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
-		kitManager.loadPlayer(event.getPlayer().getName());
+		kitManager.loadPlayer(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
-		kitManager.savePlayer(event.getPlayer().getName());
+		kitManager.savePlayer(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
 	public void onCustodySwitchEvent(CustodySwitchEvent event)
 	{
-		KitLockManager.setCanNotEquip(event.getPlayer().getName());
+		KitLockManager.setCanNotEquip(event.getPlayer().getUniqueId());
 	}
 }

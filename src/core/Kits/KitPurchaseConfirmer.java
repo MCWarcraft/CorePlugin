@@ -1,6 +1,7 @@
 package core.Kits;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,33 +14,33 @@ import core.HonorPoints.OnlinePlayerCurrencyUpdateEvent;
 
 public class KitPurchaseConfirmer implements Listener
 {
-	private HashMap<String, KitPurchase> openPurchases;
+	private HashMap<UUID, KitPurchase> openPurchases;
 	
 	public KitPurchaseConfirmer()
 	{
-		openPurchases = new HashMap<String, KitPurchase>();
+		openPurchases = new HashMap<UUID, KitPurchase>();
 	}
 	
     public void openPurchase(KitPurchase purchase)
     {
-    	openPurchases.put(purchase.getKitPlayer().getPlayerName(), purchase);
-    	Bukkit.getPlayer(purchase.getKitPlayer().getPlayerName()).sendMessage(ChatColor.GOLD + "Type " + ChatColor.GREEN + "/kit confirm " + ChatColor.GOLD + "to buy " + ChatColor.BLUE + purchase.getKitName());
-    	Bukkit.getPlayer(purchase.getKitPlayer().getPlayerName()).sendMessage(ChatColor.GOLD + "If this was a mistake, do nothing.");
+    	openPurchases.put(purchase.getKitPlayer().getPlayerUUID(), purchase);
+    	Bukkit.getPlayer(purchase.getKitPlayer().getPlayerUUID()).sendMessage(ChatColor.GOLD + "Type " + ChatColor.GREEN + "/kit confirm " + ChatColor.GOLD + "to buy " + ChatColor.BLUE + purchase.getKitName());
+    	Bukkit.getPlayer(purchase.getKitPlayer().getPlayerUUID()).sendMessage(ChatColor.GOLD + "If this was a mistake, do nothing.");
     }
     
-    public boolean finishPurchase(String playerName)
+    public boolean finishPurchase(UUID playerUUID)
     {
-    	KitPurchase purchase = openPurchases.get(playerName);
-    	openPurchases.remove(playerName);
+    	KitPurchase purchase = openPurchases.get(playerUUID);
+    	openPurchases.remove(playerUUID);
     	
     	if (purchase == null)
     		return false;
     	
     	//Give them the kit
-		CurrencyOperations.setCurrency(Bukkit.getOfflinePlayer(playerName), CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(playerName)) - purchase.getCost());
+		CurrencyOperations.setCurrency(Bukkit.getOfflinePlayer(playerUUID), CurrencyOperations.getCurrency(Bukkit.getOfflinePlayer(playerUUID)) - purchase.getCost());
 		purchase.getKitPlayer().unlockKit(purchase.getKitName());
 		
-		Bukkit.getPlayer(playerName).sendMessage(ChatColor.GREEN + "You have successfully purchased the kit '" + purchase.getKitName() + "'.");
+		Bukkit.getPlayer(playerUUID).sendMessage(ChatColor.GREEN + "You have successfully purchased the kit '" + purchase.getKitName() + "'.");
 		
 		return true;
     }
@@ -47,13 +48,13 @@ public class KitPurchaseConfirmer implements Listener
     @EventHandler
     public void onLogoffEvent(PlayerQuitEvent event)
     {
-    	openPurchases.remove(event.getPlayer().getName());
+    	openPurchases.remove(event.getPlayer().getUniqueId());
     }
     
     @EventHandler
     public void onCurrencyChangeEvent(OnlinePlayerCurrencyUpdateEvent event)
     {
-    	if (openPurchases.keySet().contains(event.getPlayer().getName()))
+    	if (openPurchases.keySet().contains(event.getPlayer().getUniqueId()))
     		event.getPlayer().sendMessage(ChatColor.RED + "Your honor balance has changed. Your purchase has been cancelled.");
     }
 }

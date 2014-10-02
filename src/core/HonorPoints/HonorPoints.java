@@ -26,10 +26,10 @@ public class HonorPoints implements Listener
 		{
 			//Configure tables for arenas
 			PreparedStatement openSinglesArenaDataStatement = plugin.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS player_currency_data" +
-					"( player varchar(17) not null," +
+					"( uuid varchar(36) not null," +
 						"currency int(10) DEFAULT 0," +
 						"multiplier double(4, 2) DEFAULT 1," +
-						"PRIMARY KEY (player) " +
+						"PRIMARY KEY (uuid) " +
 					")");
 			openSinglesArenaDataStatement.execute();
 			openSinglesArenaDataStatement.close();

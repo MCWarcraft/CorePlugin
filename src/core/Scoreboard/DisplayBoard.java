@@ -7,7 +7,6 @@ import java.util.HashMap;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -24,7 +23,7 @@ public class DisplayBoard
 	
 	private Scoreboard board;
 	private Objective o;
-	private HashMap<OfflinePlayer, Score> values;
+	private HashMap<String, Score> values;
 	private ArrayList<String> titles, fixedValues;
 	private ArrayList<ScoreboardValue> dynamicValues;
 	private ArrayList<String> dynamicKeys;
@@ -52,7 +51,7 @@ public class DisplayBoard
 		
 		setTitle(title, "");
 		
-		values = new HashMap<OfflinePlayer, Score>();
+		values = new HashMap<String, Score>();
 		titles = new ArrayList<String>();
 		fixedValues = new ArrayList<String>();
 		dynamicValues = new ArrayList<ScoreboardValue>();
@@ -117,8 +116,8 @@ public class DisplayBoard
 		values.clear();
 		for (int i = 0; i < finalStrings.size(); i++)
 		{
-			values.put(Bukkit.getOfflinePlayer(finalStrings.get(i)), o.getScore(Bukkit.getOfflinePlayer(finalStrings.get(i))));
-			values.get(Bukkit.getOfflinePlayer(finalStrings.get(i))).setScore(finalStrings.size() - i);
+			values.put(finalStrings.get(i), o.getScore(finalStrings.get(i)));
+			values.get(finalStrings.get(i)).setScore(finalStrings.size() - i);
 		}
 		if (forceshow || showing)
 			show();

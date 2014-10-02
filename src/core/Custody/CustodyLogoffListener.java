@@ -12,8 +12,8 @@ public class CustodyLogoffListener implements Listener
 	public void playerLogoffEvent(PlayerQuitEvent event)
 	{
 		Custody.switchCustody(event.getPlayer(), "off");
-		Custody.removeCustody(event.getPlayer().getName());
-		CoreScoreboardManager.removeDisplayBoard(event.getPlayer().getName());
+		Custody.removeCustody(event.getPlayer().getUniqueId());
+		CoreScoreboardManager.removeDisplayBoard(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler

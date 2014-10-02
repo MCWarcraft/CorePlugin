@@ -1,31 +1,32 @@
 package core.Custody;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Custody
 {
-	private static HashMap<String, String> custodyStatus = new HashMap<String, String>();
+	private static HashMap<UUID, String> custodyStatus = new HashMap<UUID, String>();
 	
 	public static void switchCustody(Player p, String custody)
 	{
 		Bukkit.getServer().getPluginManager().callEvent(new CustodySwitchEvent(p, custody));
-		custodyStatus.put(p.getName(), custody);
+		custodyStatus.put(p.getUniqueId(), custody);
 	}
 	
-	public static String getCustody(String playerName)
+	public static String getCustody(UUID playerUUID)
 	{
-		return custodyStatus.get(playerName);
+		return custodyStatus.get(playerUUID);
 	}
 	
-	protected static void removeCustody(String playerName)
+	protected static void removeCustody(UUID playerUUID)
 	{
-		custodyStatus.remove(playerName);
+		custodyStatus.remove(playerUUID);
 	}
 	
-	public static HashMap<String, String> getAllCustody()
+	public static HashMap<UUID, String> getAllCustody()
 	{
 		return custodyStatus;
 	}

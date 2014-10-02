@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,8 +19,8 @@ import core.CorePlugin;
 
 public class PlayerEngageListener implements Listener
 {
-	private static HashMap<String, BukkitTask> disengageTasks = new HashMap<String, BukkitTask>();
-	private static HashMap<String, String> messages = new HashMap<String, String>();
+	private static HashMap<UUID, BukkitTask> disengageTasks = new HashMap<UUID, BukkitTask>();
+	private static HashMap<UUID, String> messages = new HashMap<UUID, String>();
 	
 	private static CorePlugin plugin;
 	
@@ -40,7 +41,7 @@ public class PlayerEngageListener implements Listener
 		{
 			openEngageStatement = plugin.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS engagement_violations " +
 					"( id int NOT NULL AUTO_INCREMENT," +
-						"player varchar(17)," + 
+						"uuid varchar(36)," + 
 						"message varchar(255)," +
 						"timestamp varchar(255)," +
 						"PRIMARY KEY (id)" +
@@ -55,39 +56,39 @@ public class PlayerEngageListener implements Listener
 		}
 	}
 	
-	public static void engagePlayer(String playerName, String message, int engageTicks)
+	public static void engagePlayer(UUID playerUUID, String message, int engageTicks)
 	{
-		if (disengageTasks.containsKey(playerName))
-			disengageTasks.get(playerName).cancel();
+		if (disengageTasks.containsKey(playerUUID))
+			disengageTasks.get(playerUUID).cancel();
 		
-		messages.put(playerName, message);
+		messages.put(playerUUID, message);
 		
-		disengageTasks.put(playerName, new PlayerDisengageRunnable(playerName).runTaskLater(plugin, engageTicks));
+		disengageTasks.put(playerUUID, new PlayerDisengageRunnable(playerUUID).runTaskLater(plugin, engageTicks));
 	}
 	
-	public static void disengagePlayer(String playerName)
+	public static void disengagePlayer(UUID playerUUID)
 	{
-		if (disengageTasks.containsKey(playerName))
-			disengageTasks.remove(playerName).cancel();
+		if (disengageTasks.containsKey(playerUUID))
+			disengageTasks.remove(playerUUID).cancel();
 		
-		messages.remove(playerName);
+		messages.remove(playerUUID);
 	}
 	
-	protected synchronized static boolean logViolation(String playerName)
+	protected synchronized static boolean logViolation(UUID playerUUID)
 	{
-		if (!messages.containsKey(playerName)) return false;
+		if (!messages.containsKey(playerUUID)) return false;
 		
 		try
 		{
-			PreparedStatement logStatement = plugin.getConnection().prepareStatement("INSERT INTO engagement_violations SET player = ?, message = ?, timestamp = ?");
-			logStatement.setString(1, playerName);
-			logStatement.setString(2, messages.get(playerName));
+			PreparedStatement logStatement = plugin.getConnection().prepareStatement("INSERT INTO engagement_violations SET uuid = ?, message = ?, timestamp = ?");
+			logStatement.setString(1, playerUUID.toString());
+			logStatement.setString(2, messages.get(playerUUID));
 			logStatement.setString(3, new Timestamp(new Date().getTime()).toString());
 			
 			logStatement.execute();
 			logStatement.close();
 			
-			disengagePlayer(playerName);
+			disengagePlayer(playerUUID);
 			
 			return true;
 		}
@@ -104,13 +105,13 @@ public class PlayerEngageListener implements Listener
 		if (event.getEntity() instanceof Player)
 		{
 			Player p = (Player) event.getEntity();
-			engagePlayer(p.getName(), event.getCause().name(), engageTicks);
+			engagePlayer(p.getUniqueId(), event.getCause().name(), engageTicks);
 		}
 	}
 	
 	@EventHandler
 	public void onLogoff(PlayerQuitEvent event)
 	{
-		logViolation(event.getPlayer().getName());
+		logViolation(event.getPlayer().getUniqueId());
 	}
 }
