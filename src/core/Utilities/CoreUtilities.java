@@ -15,16 +15,18 @@ public class CoreUtilities
 			player.setHealth(20);
 			player.setFireTicks(0);
 		}
-
+		
 		player.getInventory().clear();
 		
 		//Clear armor
 		player.getInventory().setArmorContents(new ItemStack[4]);
-	
+		
 		player.updateInventory();
 		
 		for (PotionEffect effect : player.getActivePotionEffects())
 			player.removePotionEffect(effect.getType());
+		
+		player.setExp(0);
 	}
 	
 	public static void deathAnimation(Player player)

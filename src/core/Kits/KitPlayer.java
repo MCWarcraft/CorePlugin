@@ -136,6 +136,7 @@ public class KitPlayer
 	{
 		String kitToSelect = toSelect.toLowerCase();
 		
+		//If the kit exists and is unlocked
 		if (kitUnlockMap.get(kitToSelect) == null || kitUnlockMap.get(kitToSelect) == false)
 			return false;
 		

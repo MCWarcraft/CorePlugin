@@ -1,5 +1,6 @@
 package core.Kits;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,12 +13,12 @@ import core.Scoreboard.CoreScoreboardManager;
 public class KitCommandExecutor implements CommandExecutor
 {
 	private KitManager kitManager;
-	
+
 	public KitCommandExecutor(KitManager kitManager)
 	{
 		this.kitManager = kitManager;
 	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
@@ -26,9 +27,9 @@ public class KitCommandExecutor implements CommandExecutor
 			sender.sendMessage(ChatColor.RED + "Only players can use kit commands.");
 			return true;
 		}
-		
+
 		Player player = (Player) sender;
-		
+
 		if (cmd.getName().equals("kit"))
 		{
 			//If no args are supplied
@@ -38,9 +39,9 @@ public class KitCommandExecutor implements CommandExecutor
 					player.sendMessage(ChatColor.RED + "You can't equip a kit right now.");
 				else
 				{
-				//Equip kit
-				kitManager.getEquippableKit(player).equip();
-				player.sendMessage(ChatColor.GOLD + "You have equipped the " + ChatColor.GREEN + kitManager.getKitPlayer(player.getUniqueId()).getSelectedKit() + ChatColor.GOLD + " kit");
+					//Equip kit
+					kitManager.getEquippableKit(player).equip();
+					player.sendMessage(ChatColor.GOLD + "You have equipped the " + ChatColor.GREEN + kitManager.getKitPlayer(player.getUniqueId()).getSelectedKit() + ChatColor.GOLD + " kit");
 				}
 			}
 			//If args are supplied
@@ -56,21 +57,21 @@ public class KitCommandExecutor implements CommandExecutor
 					else
 						player.sendMessage(ChatColor.RED + "/kit confirm");
 				}
-				
+
 				//If the player is trying to buy a new kit
-				if (args[0].equalsIgnoreCase("buy"))
+				else if (args[0].equalsIgnoreCase("buy"))
 				{
 					//If the right number of args is supplied
 					if (args.length == 2)
 					{
 						Kit kit = kitManager.getKit(args[1]);
-						
+
 						//If the kit being attempted exists
 						if (kit != null)
 						{
 							int cost = kit.getCost();
 							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getUniqueId());
-							
+
 							//If the player doesn't already own the kit
 							if (!kitPlayer.isKitUnlocked(args[1]))
 							{
@@ -81,7 +82,7 @@ public class KitCommandExecutor implements CommandExecutor
 								}
 								else
 									player.sendMessage(ChatColor.RED + args[1] + " costs " + cost + " Honor.");
-								
+
 							}
 							//If the player already owns the kit
 							else
@@ -101,7 +102,7 @@ public class KitCommandExecutor implements CommandExecutor
 					if (args.length == 2)
 					{
 						Kit kit = kitManager.getKit(args[1]);
-						
+
 						//If the kit being attempted exists
 						if (kit != null)
 						{
@@ -116,22 +117,22 @@ public class KitCommandExecutor implements CommandExecutor
 					else
 						player.sendMessage(ChatColor.RED + "/kit cost <kitname>");
 				}
-				
+
 				//If the player is trying to buy an upgrade
-				if (args[0].equalsIgnoreCase("upgrade"))
+				else if (args[0].equalsIgnoreCase("upgrade"))
 				{
 					//If the right number of args is supplied
 					if (args.length == 3)
 					{
 						Kit kit = kitManager.getKit(args[1]);
-						
+
 						//If the kit being attempted exists
 						if (kit != null)
 						{
 							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getUniqueId());
-							
+
 							KitPiece piece = kitManager.kitPieceMap.get(args[2].toLowerCase());
-							
+
 							//If the kit piece is real
 							if (piece != null)
 							{
@@ -139,7 +140,7 @@ public class KitCommandExecutor implements CommandExecutor
 								if (kitPlayer.hasRemainingUpgrades(args[1], piece))
 								{
 									int cost = kit.getPieceUpgradeCost(piece, kitPlayer.getPieceLevel(args[1], piece) + 1);
-									
+
 									//If the player can afford the upgrade
 									if (CurrencyOperations.getCurrency(player) >= cost)
 									{
@@ -163,7 +164,7 @@ public class KitCommandExecutor implements CommandExecutor
 								if (kitPlayer.hasRemainingPotionUpgrades(args[1]))
 								{
 									int cost = kit.getPotionUpgradeCost(kitPlayer.getPotionLevel(args[1]) + 1);
-									
+
 									//If the player can afford the upgrade
 									if (CurrencyOperations.getCurrency(player) >= cost)
 									{
@@ -187,7 +188,7 @@ public class KitCommandExecutor implements CommandExecutor
 								if (kitPlayer.hasRemainingItemUpgrades(args[1], args[2]))
 								{
 									int cost = kit.getItemUpgradeCost(args[2], kitPlayer.getItemLevel(args[1], args[2]) + 1);
-									
+
 									//If the player can afford the upgrade
 									if (CurrencyOperations.getCurrency(player) >= cost)
 									{
@@ -216,22 +217,22 @@ public class KitCommandExecutor implements CommandExecutor
 					else
 						player.sendMessage(ChatColor.RED + "/kit upgrade <kitname> <piece>");
 				}
-				
+
 				//If the player is trying to check the cost of an upgrade
-				if (args[0].equalsIgnoreCase("upgradecost"))
+				else if (args[0].equalsIgnoreCase("upgradecost"))
 				{
 					//If the right number of args is supplied
 					if (args.length == 3)
 					{
 						Kit kit = kitManager.getKit(args[1]);
-						
+
 						//If the kit being attempted exists
 						if (kit != null)
 						{
 							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getUniqueId());
-							
+
 							KitPiece piece = kitManager.kitPieceMap.get(args[2].toLowerCase());
-							
+
 							//If the kit piece is real
 							if (piece != null)
 							{
@@ -255,7 +256,7 @@ public class KitCommandExecutor implements CommandExecutor
 									int cost = kit.getPotionUpgradeCost(kitPlayer.getPotionLevel(args[1]) + 1);
 									player.sendMessage(ChatColor.GREEN + "The next upgrade costs " + cost + " Honor.");
 									player.sendMessage((cost > CurrencyOperations.getCurrency(player)) ? ChatColor.DARK_RED + "You can't afford it." : ChatColor.GREEN + "You can afford it!");
-									
+
 								}
 								//If the kit being upgraded has no available upgrades
 								else
@@ -279,35 +280,40 @@ public class KitCommandExecutor implements CommandExecutor
 					//If the right number of args is supplied
 					if (args.length == 2)
 					{
-						Kit kit = kitManager.getKit(args[1]);
-						
-						//If the kit being attempted exists
-						if (kit != null)
+						//If the player owns the kit in question
+						if (kitManager.getKitPlayer(player.getUniqueId()).setSelectedKit(args[1]))
 						{
-							KitPlayer kitPlayer = kitManager.getKitPlayer(player.getUniqueId());
-							
-							//If the player owns the kit in question
-							if (kitPlayer.isKitUnlocked(args[1]))
-							{
-								kitPlayer.setSelectedKit(args[1]);
-								player.sendMessage("" + ChatColor.BOLD + ChatColor.ITALIC + ChatColor.GOLD + "You have selected the " + ChatColor.GREEN + args[1] + ChatColor.GOLD + " kit");
-
-								CoreScoreboardManager.getDisplayBoard(player.getUniqueId()).update(false);
-							}
-							//If the player doesn't own the kit in question
-							else
-								player.sendMessage(ChatColor.RED + "You don't own " + args[1]);
+							player.sendMessage("" + ChatColor.BOLD + ChatColor.ITALIC + ChatColor.GOLD + "You have selected the " + ChatColor.GREEN + args[1] + ChatColor.GOLD + " kit");
+							CoreScoreboardManager.getDisplayBoard(player.getUniqueId()).update(false);
 						}
-						//If the kit doesn't exist
+						//If the player doesn't own the kit in question
 						else
-							player.sendMessage(ChatColor.RED + "There is no kit called " + args[1] + ".");
+							player.sendMessage(ChatColor.RED + "You don't own " + args[1]);
+
 					}
 					//If the wrong number of args is supplied
 					else
 						player.sendMessage(ChatColor.RED + "/kit select <kitname>");
 				}
+				//If it's a direct equip
+				else if (args[0].equalsIgnoreCase("equip"));
+				{
+					//If the right number of args is supplied
+					if (args.length == 2)
+					{
+						//If the player owns the kit in question
+						if (kitManager.getKitPlayer(player.getUniqueId()).setSelectedKit(args[1]))
+							Bukkit.dispatchCommand(player, "kit");
+						//If the player doesn't own the kit in question
+						else
+							player.sendMessage(ChatColor.RED + "You don't own " + args[1]);
+					}
+					//If the wrong number of args is supplied
+					else
+						player.sendMessage(ChatColor.RED + "/kit equip <kitname>");
+				}
 			}
-			
+
 			return true;
 		}
 		return false;
