@@ -30,7 +30,7 @@ public class KitCommandExecutor implements CommandExecutor
 
 		Player player = (Player) sender;
 
-		if (cmd.getName().equals("kit"))
+		if (cmd.getName().equalsIgnoreCase("kit"))
 		{
 			//If no args are supplied
 			if (args.length == 0)
@@ -296,8 +296,10 @@ public class KitCommandExecutor implements CommandExecutor
 						player.sendMessage(ChatColor.RED + "/kit select <kitname>");
 				}
 				//If it's a direct equip
-				else if (args[0].equalsIgnoreCase("equip"));
+				else if (args[0].equalsIgnoreCase("equip"))
 				{
+					player.sendMessage("wtf");
+					
 					//If the right number of args is supplied
 					if (args.length == 2)
 					{

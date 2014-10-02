@@ -13,6 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -38,7 +39,8 @@ public class KitManager {
 
 	private UUID baseKitUUID;
 
-	public KitManager(CorePlugin plugin) {
+	public KitManager(CorePlugin plugin)
+	{
 		defaultKitName = plugin.getConfig().getString("defaultkit");
 
 		kitPieceMap = new HashMap<String, KitPiece>();
@@ -155,6 +157,8 @@ public class KitManager {
 
 					int cost = 0;
 					int quantity = 1;
+					String displayName = null;
+					ArrayList<String> lore = null;
 
 					String itemName = "";
 					ItemStack tempStack;
@@ -179,6 +183,14 @@ public class KitManager {
 						for (String enchantName : itemSection.getKeys(false)) {
 							if (enchantName.equalsIgnoreCase("cost"))
 								cost = itemSection.getInt("cost");
+							else if (enchantName.equalsIgnoreCase("dname"))
+								displayName = itemSection.getString("dname");
+							else if (enchantName.equalsIgnoreCase("lore"))
+							{
+								lore = new ArrayList<String>();
+								for (String lineTag : itemSection.getConfigurationSection("lore").getKeys(false))
+									lore.add(itemSection.getString("lore." + lineTag));
+							}
 							else if (enchantName.equalsIgnoreCase("quantity"))
 								quantity = itemSection.getInt("quantity");
 							else
@@ -197,6 +209,13 @@ public class KitManager {
 
 					tempStack.setAmount(quantity);
 
+					ItemMeta tempMeta = tempStack.getItemMeta();
+					if (displayName != null)
+						tempMeta.setDisplayName(displayName);
+					if (lore != null)
+						tempMeta.setLore(lore);
+					tempStack.setItemMeta(tempMeta);
+					
 					// Add piece to the temp kit
 					if (kitPieceMap.get(pieceName) != null)
 						tempKit.addPiece(kitPieceMap.get(pieceName), tempStack,
