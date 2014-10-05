@@ -21,13 +21,15 @@ public class Kit
 	private ItemStack[] hotbar, inventory;
 	
 	private String name;
-	private int hotbarIndex, inventoryIndex, cost;
+	private int hotbarIndex, inventoryIndex, cost, cooldown;
 	
 	private boolean finalized;
 	
 	public Kit(String name, int cost)
 	{
 		this.cost = cost;
+		
+		cooldown = 0;
 		
 		finalized = false;
 		
@@ -52,6 +54,17 @@ public class Kit
 		
 		potionEffects = new ArrayList<ArrayList<PotionEffect>>();
 		potionUpgradeCosts = new ArrayList<Integer>();
+	}
+	
+	public void setCooldownSeconds(int cooldownSeconds)
+	{
+		if (!finalized)
+			cooldown = cooldownSeconds;
+	}
+	
+	public int getCooldownSeconds()
+	{
+		return cooldown;
 	}
 	
 	public void addPiece(KitPiece piece, ItemStack item, int cost)

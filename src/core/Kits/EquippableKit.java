@@ -16,9 +16,7 @@ public class EquippableKit
 	{
 		this.player = player;
 		this.kitPlayer = kitPlayer;
-		
-		System.out.println("kitPlayer UUID - " + kitPlayer.getPlayerUUID());
-		
+
 		this.kit = kit;
 	}
 	
@@ -50,5 +48,8 @@ public class EquippableKit
 		
 		for (PotionEffect effect : kit.getPotionEffectSet(kitPlayer.getPotionLevel(kit.getName())))
 			player.addPotionEffect(effect);
+		
+		kitPlayer.putCooldown(kit.getName());
+		KitLockManager.justEquipped(player.getUniqueId());
 	}
 }

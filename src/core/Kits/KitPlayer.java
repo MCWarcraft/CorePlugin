@@ -11,6 +11,7 @@ public class KitPlayer
 	private HashMap<String, HashMap<String, Integer>> itemLevelMap;
 	private HashMap<String, Integer> potionLevelMap;
 	private HashMap<String, Boolean> kitUnlockMap;
+	private HashMap<String, Long> nextAvailableTime;
 	
 	private String selectedKit;
 	private KitManager kitManager;
@@ -22,9 +23,8 @@ public class KitPlayer
 		itemLevelMap = new HashMap<String, HashMap<String, Integer>>();
 		potionLevelMap = new HashMap<String, Integer>();
 		kitUnlockMap = new HashMap<String, Boolean>();
-		 
+		nextAvailableTime = new HashMap<String, Long>();
 		selectedKit = kitManager.getDefaultKitName();
-		System.out.println("Loading with kit " + selectedKit);
 		this.kitManager = kitManager;
 		unlockKit(selectedKit);
 	}
@@ -35,12 +35,53 @@ public class KitPlayer
 		
 		kitUnlockMap.put(kitName, true);
 		pieceLevelMap.put(kitName, new HashMap<KitPiece, Integer>());
+		nextAvailableTime.put(kitName, System.currentTimeMillis());
 		for (KitPiece piece : KitPiece.values())
 			pieceLevelMap.get(kitName).put(piece, 1);
 		itemLevelMap.put(kitName, new HashMap<String, Integer>());
 		for (String itemName : kitManager.getKit(name).getItemNames())
 			itemLevelMap.get(kitName).put(itemName, 1);
 		potionLevelMap.put(kitName, 1);
+	}
+	
+	public void putCooldown(String kitName)
+	{
+		Kit tempKit = kitManager.getKit(kitName);
+		if (tempKit == null) return;
+		
+		nextAvailableTime.put(kitName.toLowerCase(), System.currentTimeMillis() + tempKit.getCooldownSeconds() * 1000);
+	}
+	
+	protected void setCooldownTime(String kitName, long time)
+	{
+		Kit tempKit = kitManager.getKit(kitName);
+		if (tempKit == null) return;
+		
+		nextAvailableTime.put(kitName.toLowerCase(), time);
+	}
+	
+	public boolean isOnCooldown(String kitName)
+	{
+		Kit tempKit = kitManager.getKit(kitName);
+		if (tempKit == null) return false;
+		
+		return (System.currentTimeMillis() < nextAvailableTime.get(kitName.toLowerCase()));
+	}
+	
+	public long getAvailableAtTime(String kitName)
+	{
+		Kit tempKit = kitManager.getKit(kitName);
+		if (tempKit == null) return 0;
+		
+		return nextAvailableTime.get(kitName.toLowerCase());
+	}
+	
+	public void clearCooldown(String kitName)
+	{
+		Kit tempKit = kitManager.getKit(kitName);
+		if (tempKit == null) return;
+		
+		nextAvailableTime.put(kitName.toLowerCase(), System.currentTimeMillis());
 	}
 	
 	public boolean upgradePiece(String name, KitPiece piece, int pieceLevel)
@@ -150,17 +191,7 @@ public class KitPlayer
 	}
 	
 	public int getItemLevel(String kitName, String itemName)
-	{
-		System.out.println("Enumeration of kits in level map:\n---------------------------");
-		for (String kitNameT : itemLevelMap.keySet())
-			System.out.println("    " + kitNameT);
-		System.out.println("----------------------");
-		
-		System.out.println("Kitname - " + kitName);
-		System.out.println("itemLevelMap null: " + (itemLevelMap == null));
-		System.out.println("kitName: " + (kitName == null));
-		System.out.println("itemLevelMap.get(kitName) null: " + (itemLevelMap.get(kitName) == null));
-		
+	{		
 		return itemLevelMap.get(kitName).get(itemName);
 	}
 	

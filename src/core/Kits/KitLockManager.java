@@ -13,12 +13,18 @@ public class KitLockManager
 	{
 		if (canEquip.get(playerUUID) == null || canEquip.get(playerUUID) == false) return false;
 		
+		return true;
+	}
+	
+	public static boolean justEquipped(UUID playerUUID)
+	{
 		if (singleEquipees.contains(playerUUID))
 		{
 			singleEquipees.remove(playerUUID);
 			canEquip.put(playerUUID, false);
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	public static void setCanEquip(boolean infinite, UUID playerUUID)

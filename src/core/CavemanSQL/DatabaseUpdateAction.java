@@ -17,6 +17,7 @@ public class DatabaseUpdateAction
 	private HashMap<String, Integer> intValues;
 	private HashMap<String, Double> doubleValues;
 	private HashMap<String, Boolean> booleanValues;
+	private HashMap<String, Long> longValues;
 	
 	private Connection connection;
 	private String tableName;
@@ -31,6 +32,7 @@ public class DatabaseUpdateAction
 		intValues = new HashMap<String, Integer>();
 		doubleValues = new HashMap<String, Double>();
 		booleanValues = new HashMap<String, Boolean>();
+		longValues = new HashMap<String, Long>();
 		
 		this.connection = connection;
 		this.tableName = tableName;
@@ -78,6 +80,16 @@ public class DatabaseUpdateAction
 	public void setBoolean(String column, boolean value)
 	{
 		booleanValues.put(column, value);
+	}
+	
+	/** Sets a long value to be updated
+	 * 
+	 * @param column The column in which the value will be set
+	 * @param value The boolean that will be put in that column
+	 */
+	public void setLong(String column, long value)
+	{
+		longValues.put(column, value);
 	}
 	
 	/** Sets the primary key for which data is being set
@@ -134,6 +146,8 @@ public class DatabaseUpdateAction
 				statementString = statementString + key + "=?,";
 			for (String key : booleanValues.keySet())
 				statementString = statementString + key + "=?,";
+			for (String key : longValues.keySet())
+				statementString = statementString + key + "=?,";
 			
 			statementString = statementString.substring(0, statementString.length() - 1) + " " + (dataExists ? "WHERE " + primaryKeyName +"=?" : "," + primaryKeyName + "=?");
 			
@@ -158,6 +172,11 @@ public class DatabaseUpdateAction
 			for (String key : booleanValues.keySet())
 			{
 				saveStatement.setBoolean(number, booleanValues.get(key));
+				number++;
+			}
+			for (String key : longValues.keySet())
+			{
+				saveStatement.setLong(number, longValues.get(key));
 				number++;
 			}
 			

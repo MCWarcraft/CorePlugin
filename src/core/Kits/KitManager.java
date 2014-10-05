@@ -57,12 +57,12 @@ public class KitManager {
 		databaseConnection = new DatabaseConnection(plugin.getConfig()
 				.getString("sql.ip"), plugin.getConfig().getString("sql.port"),
 				plugin.getConfig().getString("sql.database"), plugin
-						.getConfig().getString("sql.username"), plugin
-						.getConfig().getString("sql.password"));
+				.getConfig().getString("sql.username"), plugin
+				.getConfig().getString("sql.password"));
 
 		loadKits();
 		generateKitTables();
-
+		
 		baseKitUUID = UUID.fromString("3c19e7c4-080c-49e5-8507-509b18a82e3a");
 		loadPlayer(baseKitUUID);
 
@@ -70,9 +70,9 @@ public class KitManager {
 		EquippableKitConnector.initialize(this);
 
 		plugin.getServer().getPluginManager()
-				.registerEvents(new KitListener(this), plugin);
+		.registerEvents(new KitListener(this), plugin);
 		plugin.getServer().getPluginManager()
-				.registerEvents(kitPurchaseConfirmer, plugin);
+		.registerEvents(kitPurchaseConfirmer, plugin);
 	}
 
 	public void shutdown() {
@@ -101,6 +101,8 @@ public class KitManager {
 			return null;
 		if (kits.get(kitPlayers.get(player.getUniqueId()).getSelectedKit()) == null)
 			return null;
+		if (kitPlayers.get(player.getUniqueId()).isOnCooldown(kitPlayers.get(player.getUniqueId()).getSelectedKit()))
+			return null;
 
 		return new EquippableKit(player, kitPlayers.get(player.getUniqueId()),
 				kits.get(kitPlayers.get(player.getUniqueId()).getSelectedKit()));
@@ -124,11 +126,11 @@ public class KitManager {
 		// Alert if no default kit is found
 		if (!kitsSection.getKeys(false).contains(defaultKitName))
 			plugin.getServer().getLogger()
-					.info("No default kit found. Expect erratic behavior.");
+			.info("No default kit found. Expect erratic behavior.");
 
 		// Loop over all kits in config
-		for (String kitName : kitsSection.getKeys(false)) {
-			System.out.println("Kit: " + kitName);
+		for (String kitName : kitsSection.getKeys(false))
+		{
 
 			ConfigurationSection kitSection = kitsSection
 					.getConfigurationSection(kitName);
@@ -140,7 +142,6 @@ public class KitManager {
 
 			// Loop over each piece of the kit
 			for (String pieceName : upgradableSection.getKeys(false)) {
-				System.out.println("Piece: " + pieceName);
 
 				if (pieceName.equalsIgnoreCase("potions"))
 					continue;
@@ -150,7 +151,6 @@ public class KitManager {
 
 				// Loop over each level of the piece
 				for (String levelNumber : pieceSection.getKeys(false)) {
-					System.out.println("Level: " + levelNumber);
 
 					ConfigurationSection levelSection = pieceSection
 							.getConfigurationSection(levelNumber);
@@ -173,8 +173,6 @@ public class KitManager {
 
 						ConfigurationSection itemSection = levelSection
 								.getConfigurationSection(itemName);
-
-						System.out.println("Item Name:" + itemName);
 
 						tempStack = new ItemStack(
 								Material.getMaterial(itemName));
@@ -215,7 +213,7 @@ public class KitManager {
 					if (lore != null)
 						tempMeta.setLore(lore);
 					tempStack.setItemMeta(tempMeta);
-					
+
 					// Add piece to the temp kit
 					if (kitPieceMap.get(pieceName) != null)
 						tempKit.addPiece(kitPieceMap.get(pieceName), tempStack,
@@ -267,6 +265,9 @@ public class KitManager {
 					tempKit.addPotionEffectSet(effects, cost);
 
 				}
+			
+			if (kitSection.contains("cooldown"))
+				tempKit.setCooldownSeconds(kitSection.getInt("cooldown"));
 
 			// Add to KitManager
 			tempKit.finalize();
@@ -293,14 +294,13 @@ public class KitManager {
 						+ "unlocked boolean DEFAULT "
 						+ (kitName.equalsIgnoreCase(defaultKitName) ? "1" : "0")
 						+ "," + "potions int DEFAULT 1,"
-						+
-						//
-						"helmet int DEFAULT 1," + "chestplate int DEFAULT 1,"
-						+ "leggings int DEFAULT 1," + "boots int DEFAULT 1,";
+						+ "helmet int DEFAULT 1," + "chestplate int DEFAULT 1,"
+						+ "leggings int DEFAULT 1," + "boots int DEFAULT 1,"
+						+ "availableat BIGINT DEFAULT 0,";
 
 				for (String itemName : kits.get(kitName).getItemNames())
 					openKitTableString = openKitTableString + itemName
-							+ " int DEFAULT 1,";
+					+ " int DEFAULT 1,";
 
 				openKitTableString = openKitTableString + "PRIMARY KEY (uuid))";
 
@@ -340,6 +340,8 @@ public class KitManager {
 					for (String itemName : kits.get(kitName).getItemNames())
 						kitPlayer.upgradeItem(kitName, itemName,
 								results.getInt(itemName));
+					
+					kitPlayer.setCooldownTime(kitName, results.getLong("availableat"));
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -349,9 +351,6 @@ public class KitManager {
 
 	public void savePlayer(UUID playerUUID) {
 		KitPlayer kitPlayer = kitPlayers.get(playerUUID);
-
-		System.out.println(playerUUID.toString() + ": "
-				+ playerUUID.toString().length());
 
 		for (String kitName : kits.keySet()) {
 			DatabaseUpdateAction updateAction = databaseConnection
@@ -372,7 +371,8 @@ public class KitManager {
 						kitPlayer.getPieceLevel(kitName, KitPiece.LEGGINGS));
 				updateAction.setInt("boots",
 						kitPlayer.getPieceLevel(kitName, KitPiece.BOOTS));
-
+				updateAction.setLong("availableat",
+						kitPlayer.getAvailableAtTime(kitName));
 				for (String itemName : kits.get(kitName).getItemNames())
 					updateAction.setInt(itemName,
 							kitPlayer.getItemLevel(kitName, itemName));
