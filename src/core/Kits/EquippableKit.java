@@ -12,12 +12,19 @@ public class EquippableKit
 	private KitPlayer kitPlayer;
 	private Kit kit;
 	
+	private static String defaultKitName;
+	
 	public EquippableKit(Player player, KitPlayer kitPlayer, Kit kit)
 	{
 		this.player = player;
 		this.kitPlayer = kitPlayer;
 
 		this.kit = kit;
+	}
+	
+	public static void initialize(String defaultKitName)
+	{
+		EquippableKit.defaultKitName = defaultKitName;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -51,5 +58,7 @@ public class EquippableKit
 		
 		kitPlayer.putCooldown(kit.getName());
 		KitLockManager.justEquipped(player.getUniqueId());
+		
+		if (kit.getCooldownSeconds() != 0) kitPlayer.setSelectedKit(defaultKitName);
 	}
 }

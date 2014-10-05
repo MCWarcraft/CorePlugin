@@ -15,4 +15,9 @@ public class EquippableKitConnector
 	{
 		return kitManager.getBaseEquippableKit(player, kitName);
 	}
+	
+	public static void equipSelectedKit(Player player)
+	{
+		kitManager.getEquippableKit(player).equip();
+	}
 }

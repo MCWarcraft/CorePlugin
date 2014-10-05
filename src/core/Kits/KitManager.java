@@ -42,7 +42,8 @@ public class KitManager {
 	public KitManager(CorePlugin plugin)
 	{
 		defaultKitName = plugin.getConfig().getString("defaultkit");
-
+		EquippableKit.initialize(defaultKitName);
+		
 		kitPieceMap = new HashMap<String, KitPiece>();
 		for (KitPiece piece : KitPiece.values())
 			kitPieceMap.put(piece.toString(), piece);

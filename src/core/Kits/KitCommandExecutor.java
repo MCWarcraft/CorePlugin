@@ -56,8 +56,9 @@ public class KitCommandExecutor implements CommandExecutor
 					else
 					{
 						//Equip kit
+						String equippedKitName = kitPlayer.getSelectedKit();
 						kitManager.getEquippableKit(player).equip();
-						player.sendMessage(ChatColor.GOLD + "You have equipped the " + ChatColor.GREEN + kitPlayer.getSelectedKit() + ChatColor.GOLD + " kit");
+						player.sendMessage(ChatColor.GOLD + "You have equipped the " + ChatColor.GREEN + equippedKitName + ChatColor.GOLD + " kit");
 					}
 				}
 			}
@@ -298,6 +299,12 @@ public class KitCommandExecutor implements CommandExecutor
 						{
 							player.sendMessage("" + ChatColor.BOLD + ChatColor.ITALIC + ChatColor.GOLD + "You have selected the " + ChatColor.GREEN + args[1] + ChatColor.GOLD + " kit");
 							CoreScoreboardManager.getDisplayBoard(player.getUniqueId()).update(false);
+						}
+						else if (kitPlayer.isOnCooldown(args[1]))
+						{
+							player.sendMessage(ChatColor.RED + args[1] + " is on cooldown.");
+							player.sendMessage(ChatColor.RED + "It will be available on "
+							+ ChatColor.GOLD + dateFormatter.format(new Date(kitPlayer.getAvailableAtTime(args[1]))) + " EST");
 						}
 						//If the player doesn't own the kit in question
 						else

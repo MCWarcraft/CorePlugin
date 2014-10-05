@@ -49,7 +49,7 @@ public class KitPlayer
 		Kit tempKit = kitManager.getKit(kitName);
 		if (tempKit == null) return;
 		
-		nextAvailableTime.put(kitName.toLowerCase(), System.currentTimeMillis() + tempKit.getCooldownSeconds() * 1000);
+		setCooldownTime(kitName.toLowerCase(), System.currentTimeMillis() + tempKit.getCooldownSeconds() * 1000);
 	}
 	
 	protected void setCooldownTime(String kitName, long time)
@@ -179,6 +179,9 @@ public class KitPlayer
 		
 		//If the kit exists and is unlocked
 		if (kitUnlockMap.get(kitToSelect) == null || kitUnlockMap.get(kitToSelect) == false)
+			return false;
+		
+		if (this.isOnCooldown(toSelect))
 			return false;
 		
 		selectedKit = kitToSelect;
