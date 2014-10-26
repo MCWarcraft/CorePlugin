@@ -42,8 +42,13 @@ public class KitCommandExecutor implements CommandExecutor
 			//If no args are supplied
 			if (args.length == 0)
 			{
-				if (!KitLockManager.canEquip(player.getUniqueId()))
+				//If the player flat out can't equip a kit
+				if (!KitLockManager.canEquip(player.getUniqueId()) && !KitLockManager.isEquipped(player.getUniqueId()))
 					player.sendMessage(ChatColor.RED + "You can't equip a kit right now.");
+				//If the player can't equip because they have a kit equipped
+				else if (!KitLockManager.canEquip(player.getUniqueId()))
+					player.sendMessage(ChatColor.RED + "You already have a kit equipped.");
+				//If the player can equip
 				else
 				{
 					//If the kit is on cooldown
@@ -324,6 +329,12 @@ public class KitCommandExecutor implements CommandExecutor
 						//If the player owns the kit in question
 						if (kitPlayer.setSelectedKit(args[1]))
 							Bukkit.dispatchCommand(player, "kit");
+						else if (kitPlayer.isOnCooldown(args[1]))
+						{
+							player.sendMessage(ChatColor.RED + args[1] + " is on cooldown.");
+							player.sendMessage(ChatColor.RED + "It will be available on "
+							+ ChatColor.GOLD + dateFormatter.format(new Date(kitPlayer.getAvailableAtTime(args[1]))) + " EST");
+						}
 						//If the player doesn't own the kit in question
 						else
 							player.sendMessage(ChatColor.RED + "You don't own " + args[1]);

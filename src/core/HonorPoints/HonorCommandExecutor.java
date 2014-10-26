@@ -168,7 +168,7 @@ public class HonorCommandExecutor implements CommandExecutor
 						sender.sendMessage(ChatColor.RED + "/honor (view/see) <player>");
 				}
 				//If the sender is trying to set the multipler
-				else if (args[0].equalsIgnoreCase("setmultiplier"))
+				else if (args[0].equalsIgnoreCase("setmultiplier") && sender.hasPermission("honor.setmultiplier"))
 				{
 
 						//If there are enough args

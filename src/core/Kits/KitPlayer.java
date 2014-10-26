@@ -65,7 +65,7 @@ public class KitPlayer
 		Kit tempKit = kitManager.getKit(kitName);
 		if (tempKit == null) return false;
 		
-		return (System.currentTimeMillis() < nextAvailableTime.get(kitName.toLowerCase()));
+		return nextAvailableTime.get(kitName.toLowerCase()) != null ? (System.currentTimeMillis() < nextAvailableTime.get(kitName.toLowerCase())) : false;
 	}
 	
 	public long getAvailableAtTime(String kitName)

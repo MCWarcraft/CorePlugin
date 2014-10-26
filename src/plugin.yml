@@ -17,11 +17,17 @@ commands:
     usage: /<command>
   coresave:
     description: 'Forces a server save'
-    usage: /<command
+    usage: /<command>
+  serial:
+    description: 'Prints serialized meta'
+    usage: /<command>
 
 permissions:
   honor.manipulate:
     description: Gives access to /honor (add/give), /honor (take/deduct), and /honor set
+    default: op
+  honor.multiplier:
+    description: Gives access to /honor setmultiplier
     default: op
 
   honor.view.*:

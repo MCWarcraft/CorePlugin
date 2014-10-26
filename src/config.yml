@@ -30,13 +30,14 @@ kits:
           DIAMOND_SWORD:
             KNOCKBACK: 1
             DURABILITY: 2
-          cost: 100
-          quantity: 1
+            cost: 100
+            quantity: 1
       #helmet:
       #chestplate:
       #leggings:
       #boots:
       #potions:
+      #bottles:
     hotbar:
       1:
     inventory:

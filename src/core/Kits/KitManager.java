@@ -14,8 +14,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import core.CorePlugin;
 import core.CavemanSQL.DatabaseConnection;
@@ -43,7 +45,7 @@ public class KitManager {
 	{
 		defaultKitName = plugin.getConfig().getString("defaultkit");
 		EquippableKit.initialize(defaultKitName);
-		
+
 		kitPieceMap = new HashMap<String, KitPiece>();
 		for (KitPiece piece : KitPiece.values())
 			kitPieceMap.put(piece.toString(), piece);
@@ -63,7 +65,7 @@ public class KitManager {
 
 		loadKits();
 		generateKitTables();
-		
+
 		baseKitUUID = UUID.fromString("3c19e7c4-080c-49e5-8507-509b18a82e3a");
 		loadPlayer(baseKitUUID);
 
@@ -142,8 +144,8 @@ public class KitManager {
 					kitSection.getInt("cost"));
 
 			// Loop over each piece of the kit
-			for (String pieceName : upgradableSection.getKeys(false)) {
-
+			for (String pieceName : upgradableSection.getKeys(false))
+			{
 				if (pieceName.equalsIgnoreCase("potions"))
 					continue;
 
@@ -151,21 +153,34 @@ public class KitManager {
 						.getConfigurationSection(pieceName);
 
 				// Loop over each level of the piece
-				for (String levelNumber : pieceSection.getKeys(false)) {
+				for (String levelNumber : pieceSection.getKeys(false))
+				{
+					/*
+					 * THIS IS THE IMPORTANT SCOPE
+					 */
 
-					ConfigurationSection levelSection = pieceSection
-							.getConfigurationSection(levelNumber);
+					ConfigurationSection levelSection = pieceSection.getConfigurationSection(levelNumber);
 
+					//These apply to all itemstacks
 					int cost = 0;
 					int quantity = 1;
 					String displayName = null;
 					ArrayList<String> lore = null;
 
-					String itemName = "";
-					ItemStack tempStack;
+					//Purely for potion bottles
+					int potionLevel = 1;
+					boolean splash = false;
 
-					// If something is defined sub to level
-					if (levelSection != null) {
+					//These are used to determine how things are added
+					String itemName = "";
+					ItemStack tempStack = null;
+					Material tempMaterial = null;
+					Potion tempPotion = null;
+					PotionType tempPotionType = null;
+
+					// If the item has modifiers
+					if (levelSection != null)
+					{
 						// Loop once to get item name
 						for (String item : pieceSection
 								.getConfigurationSection(levelNumber).getKeys(
@@ -175,11 +190,36 @@ public class KitManager {
 						ConfigurationSection itemSection = levelSection
 								.getConfigurationSection(itemName);
 
-						tempStack = new ItemStack(
-								Material.getMaterial(itemName));
+						tempMaterial = Material.getMaterial(itemName);
+						if (tempMaterial == null)
+							tempPotionType = PotionType.valueOf(itemName);
 
+						//If this is a potion bottle
+						if (tempPotionType != null)
+						{
+							tempPotion = new Potion(tempPotionType);
+							
+							for (String enchantName : itemSection.getKeys(false))
+							{
+								if (enchantName.equalsIgnoreCase("potionlevel"))
+									potionLevel = itemSection.getInt("potionlevel");
+								else if (enchantName.equalsIgnoreCase("splash"))
+									splash = itemSection.getBoolean("splash");
+							}
+							
+							tempPotion.setLevel(potionLevel);
+							tempPotion.setSplash(splash);
+							
+							tempStack = tempPotion.toItemStack(1);
+						}
+						else if (tempMaterial != null)
+							tempStack = new ItemStack(tempMaterial);
+						else
+							continue;
+						
 						// Loop over enchants
-						for (String enchantName : itemSection.getKeys(false)) {
+						for (String enchantName : itemSection.getKeys(false))
+						{
 							if (enchantName.equalsIgnoreCase("cost"))
 								cost = itemSection.getInt("cost");
 							else if (enchantName.equalsIgnoreCase("dname"))
@@ -192,35 +232,58 @@ public class KitManager {
 							}
 							else if (enchantName.equalsIgnoreCase("quantity"))
 								quantity = itemSection.getInt("quantity");
-							else
+							else if (tempMaterial != null)
 								tempStack.addEnchantment(
 										Enchantment.getByName(enchantName),
 										itemSection.getInt(enchantName));
 						}
+
 					}
 					// If nothing is defined sub to level
-					else {
+					else
+					{
 						// Define stack simple way
 						itemName = pieceSection.getString(levelNumber);
-						tempStack = new ItemStack(
-								Material.getMaterial(itemName));
+						tempMaterial = Material.getMaterial(itemName);
+						if (tempMaterial == null) 
+							tempPotionType = PotionType.valueOf(itemName);
+						
+						//If this is a potion bottle
+						if (tempPotionType != null)
+						{
+							tempPotion = new Potion(tempPotionType);
+							tempPotion.setLevel(potionLevel);
+							tempPotion.setSplash(splash);
+							tempStack = tempPotion.toItemStack(1);
+						}
+						else if (tempMaterial != null)
+							tempStack = new ItemStack(tempMaterial);
+						else
+							continue;
 					}
 
-					tempStack.setAmount(quantity);
+					if (tempStack != null)
+					{
+						tempStack.setAmount(quantity);
 
-					ItemMeta tempMeta = tempStack.getItemMeta();
-					if (displayName != null)
-						tempMeta.setDisplayName(displayName);
-					if (lore != null)
-						tempMeta.setLore(lore);
-					tempStack.setItemMeta(tempMeta);
+						ItemMeta tempMeta = tempStack.getItemMeta();
+						if (displayName != null)
+							tempMeta.setDisplayName(displayName);
+						if (lore != null)
+							tempMeta.setLore(lore);
+						tempStack.setItemMeta(tempMeta);
 
-					// Add piece to the temp kit
-					if (kitPieceMap.get(pieceName) != null)
-						tempKit.addPiece(kitPieceMap.get(pieceName), tempStack,
-								cost);
-					else
-						tempKit.addItem(pieceName, tempStack, cost);
+						// Add piece to the temp kit
+						if (kitPieceMap.get(pieceName) != null)
+							tempKit.addPiece(kitPieceMap.get(pieceName), tempStack,
+									cost);
+						else
+							tempKit.addItem(pieceName, tempStack, cost);
+					}
+
+					/*
+					 * END IMPORTANT SCOPE
+					 */
 				}
 			}
 
@@ -266,7 +329,7 @@ public class KitManager {
 					tempKit.addPotionEffectSet(effects, cost);
 
 				}
-			
+
 			if (kitSection.contains("cooldown"))
 				tempKit.setCooldownSeconds(kitSection.getInt("cooldown"));
 
@@ -341,7 +404,7 @@ public class KitManager {
 					for (String itemName : kits.get(kitName).getItemNames())
 						kitPlayer.upgradeItem(kitName, itemName,
 								results.getInt(itemName));
-					
+
 					kitPlayer.setCooldownTime(kitName, results.getLong("availableat"));
 				}
 			} catch (SQLException e) {
