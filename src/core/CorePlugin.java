@@ -72,7 +72,6 @@ public class CorePlugin extends JavaPlugin implements Listener
 		
 		//Set command executors
 		this.getCommand("who").setExecutor(new CoreCommandExecutor(this));
-		this.getCommand("serial").setExecutor(new CoreCommandExecutor(this));
 		this.getCommand("honor").setExecutor(new HonorCommandExecutor());
 		this.getCommand("kit").setExecutor(new KitCommandExecutor(kitManager));
 		this.getCommand("coresave").setExecutor(new CoreSaveExecutor());
