@@ -21,6 +21,7 @@ public class PlayerEngageListener implements Listener
 {
 	private static HashMap<UUID, BukkitTask> disengageTasks = new HashMap<UUID, BukkitTask>();
 	private static HashMap<UUID, String> messages = new HashMap<UUID, String>();
+	private static HashMap<UUID, Long> disengageTimes = new HashMap<UUID, Long>();
 	
 	private static CorePlugin plugin;
 	
@@ -58,25 +59,39 @@ public class PlayerEngageListener implements Listener
 	
 	public static void engagePlayer(UUID playerUUID, String message, int engageTicks)
 	{
+		System.out.println("Engage");
+		
 		if (disengageTasks.containsKey(playerUUID))
 			disengageTasks.get(playerUUID).cancel();
 		
 		messages.put(playerUUID, message);
+		disengageTimes.put(playerUUID, System.currentTimeMillis() + engageTicks * 50);
 		
 		disengageTasks.put(playerUUID, new PlayerDisengageRunnable(playerUUID).runTaskLater(plugin, engageTicks));
 	}
 	
 	public static void disengagePlayer(UUID playerUUID)
 	{
+		System.out.println("Disengage");
+		
 		if (disengageTasks.containsKey(playerUUID))
 			disengageTasks.remove(playerUUID).cancel();
 		
 		messages.remove(playerUUID);
+		disengageTimes.remove(playerUUID);
 	}
 	
 	public static boolean isEngaged(UUID playerUUID)
 	{
-		return disengageTasks.containsKey(playerUUID);
+		return disengageTimes.containsKey(playerUUID);
+	}
+	
+	public static long getSecondsToDisengage(UUID playerUUID)
+	{
+		if (isEngaged(playerUUID))
+			return (disengageTimes.get(playerUUID) - System.currentTimeMillis()) / 1000 + 1;
+		
+		return 0;
 	}
 	
 	protected synchronized static boolean logViolation(UUID playerUUID)
