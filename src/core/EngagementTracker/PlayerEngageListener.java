@@ -74,6 +74,11 @@ public class PlayerEngageListener implements Listener
 		messages.remove(playerUUID);
 	}
 	
+	public static boolean isEngaged(UUID playerUUID)
+	{
+		return disengageTasks.containsKey(playerUUID);
+	}
+	
 	protected synchronized static boolean logViolation(UUID playerUUID)
 	{
 		if (!messages.containsKey(playerUUID)) return false;
