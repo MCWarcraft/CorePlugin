@@ -76,6 +76,9 @@ public class DropBlocker implements Listener
 	@EventHandler
 	public void onCustodySwitch(CustodySwitchEvent event)
 	{
-		dropAllowed.remove(event.getPlayer().getUniqueId());
+		if (event.isCoreControlled())
+			dropAllowed.remove(event.getPlayer().getUniqueId());
+		else
+			setDropAllowed(event.getPlayer().getUniqueId());
 	}
 }

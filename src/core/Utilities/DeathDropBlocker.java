@@ -21,7 +21,10 @@ public class DeathDropBlocker implements Listener
 	@EventHandler
 	public void onCustodySwitch(CustodySwitchEvent event)
 	{
-		canDrop.remove(event.getPlayer().getUniqueId());
+		if (event.isCoreControlled())
+			canDrop.remove(event.getPlayer().getUniqueId());
+		else
+			setCanDrop(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler

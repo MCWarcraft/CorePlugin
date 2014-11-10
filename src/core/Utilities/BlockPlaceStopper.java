@@ -21,7 +21,10 @@ public class BlockPlaceStopper implements Listener
 	@EventHandler
 	public void onCustodySwitch(CustodySwitchEvent event)
 	{
-		canPlace.remove(event.getPlayer().getUniqueId());
+		if (event.isCoreControlled() == true)
+			canPlace.remove(event.getPlayer().getUniqueId());
+		else
+			setCanPlace(event.getPlayer().getUniqueId());
 	}
 	
 	@SuppressWarnings("deprecation")

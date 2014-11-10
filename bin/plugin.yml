@@ -7,7 +7,7 @@ commands:
     usage: /<command>
   honor:
     description: 'The root command for the Honor Points Plugin'
-    usage: '/<command> put bullshit here'
+    usage: '/<command> args'
     permission-message: 'You don''t have <permission>'
   kit:
     description: Grab a kit
@@ -18,6 +18,9 @@ commands:
   coresave:
     description: 'Forces a server save'
     usage: /<command>
+  custody:
+    description: 'Chains commands with custody switches'
+    usage: /<command> customname
 
 permissions:
   honor.manipulate:

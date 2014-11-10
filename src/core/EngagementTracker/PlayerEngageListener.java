@@ -59,8 +59,6 @@ public class PlayerEngageListener implements Listener
 	
 	public static void engagePlayer(UUID playerUUID, String message, int engageTicks)
 	{
-		System.out.println("Engage");
-		
 		if (disengageTasks.containsKey(playerUUID))
 			disengageTasks.get(playerUUID).cancel();
 		
@@ -72,8 +70,6 @@ public class PlayerEngageListener implements Listener
 	
 	public static void disengagePlayer(UUID playerUUID)
 	{
-		System.out.println("Disengage");
-		
 		if (disengageTasks.containsKey(playerUUID))
 			disengageTasks.remove(playerUUID).cancel();
 		

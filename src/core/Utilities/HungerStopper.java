@@ -21,7 +21,10 @@ public class HungerStopper implements Listener
 	@EventHandler
 	public void onCustodySwitch(CustodySwitchEvent event)
 	{
-		canGetHungry.remove(event.getPlayer().getUniqueId());
+		if (event.isCoreControlled())
+			canGetHungry.remove(event.getPlayer().getUniqueId());
+		else
+			setCanGetHungry(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler

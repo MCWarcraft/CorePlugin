@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import core.Custody.CustodyCommands;
 import core.Custody.CustodyLogoffListener;
 import core.EngagementTracker.PlayerEngageListener;
 import core.Event.PlayerVoidDamageListener;
@@ -75,6 +76,7 @@ public class CorePlugin extends JavaPlugin implements Listener
 		this.getCommand("honor").setExecutor(new HonorCommandExecutor());
 		this.getCommand("kit").setExecutor(new KitCommandExecutor(kitManager));
 		this.getCommand("coresave").setExecutor(new CoreSaveExecutor());
+		this.getCommand("custody").setExecutor(new CustodyCommands(this));
 		
 		//Start CoreScoreboardManager
 		CoreScoreboardManager.initialize(this);

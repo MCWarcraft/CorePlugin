@@ -12,7 +12,12 @@ public class Custody
 	
 	public static void switchCustody(Player p, String custody)
 	{
-		Bukkit.getServer().getPluginManager().callEvent(new CustodySwitchEvent(p, custody));
+		switchCustody(p, custody, true);
+	}
+	
+	public static void switchCustody(Player p, String custody, boolean coreControl)
+	{
+		Bukkit.getServer().getPluginManager().callEvent(new CustodySwitchEvent(p, custody, coreControl));
 		custodyStatus.put(p.getUniqueId(), custody);
 	}
 	
